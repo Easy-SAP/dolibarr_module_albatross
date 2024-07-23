@@ -1,0 +1,48 @@
+# Copyright (C) 2024 SuperAdmin
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#
+# Générique
+#
+
+# Module label 'ModuleAlbatrossName'
+ModuleAlbatrossName = Albatross
+# Module description 'ModuleAlbatrossDesc'
+ModuleAlbatrossDesc = Description de Albatross
+
+#
+# Page d'administration
+#
+AlbatrossSetup = Configuration du module Albatross
+Settings = Réglages
+AlbatrossSetupPage = Page de configuration du module Albatross
+
+#
+# Page À propos
+#
+About = À propos
+AlbatrossAbout = À propos de Albatross
+AlbatrossAboutPage = Page à propos de Albatross
+
+#
+# Page d'exemple
+#
+MyPageName = Nom de ma page
+
+#
+# Box d'exemple
+#
+MyWidget = Mon widget
+MyWidgetDescription = Description de mon widget
