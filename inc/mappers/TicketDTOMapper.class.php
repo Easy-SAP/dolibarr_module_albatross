@@ -5,8 +5,8 @@ namespace Albatross;
 include_once dirname(__DIR__) . '/models/TicketDTO.class.php';
 require_once DOL_DOCUMENT_ROOT . '/ticket/class/cticketcategory.class.php';
 
-use albatross\inc\models\TicketDTO;
-use Ticket;
+use \Ticket;
+use Albatross\TicketDTO;
 
 class TicketDTOMapper
 {
@@ -18,11 +18,11 @@ class TicketDTOMapper
             ->setEntitySiret($ticket->array_options['options_entity_siret'] ?? '')
             ->setEntityModel($ticket->array_options['options_entity_template'] ?? -1)
             ->setUserFirstname($ticket->array_options['options_user_lastname'])
-            ->setUserLastname($ticket->array_options['options_user_firstname'])
-            ->setUserPhone($ticket->array_options['options_user_phone'])
+            ->setUserLastname($ticket->array_options['options_user_firstname'] ?? '')
+            ->setUserPhone($ticket->array_options['options_user_phone'] ?? '')
             ->setUserEmail($ticket->array_options['options_user_email'])
             ->setUserAddress($ticket->array_options['options_thirdparty_address'] ?? '')
-            ->setUserZipCode($ticket->array_options['options_thirdparty_zipcode'] ?? '')
+            ->setUserZipCode($ticket->array_options['options_thirdparty_zipcode'] ?? 0)
             ->setUserCity($ticket->array_options['options_thirdparty_town'] ?? '')
             ->setEntitySponsor($ticket->array_options['options_user_sponsor'] ?? 0);
 
