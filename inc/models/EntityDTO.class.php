@@ -39,7 +39,18 @@ class EntityDTO
      */
     private $sponsor_id;
 
-    public function getLabel(): string
+	public function __construct()
+	{
+		$this->label = '';
+		$this->name = '';
+		$this->address = '';
+		$this->zipCode = '';
+		$this->city = '';
+		$this->model_id = 0;
+		$this->sponsor_id = 0;
+	}
+
+	public function getLabel(): string
     {
         return $this->label;
     }

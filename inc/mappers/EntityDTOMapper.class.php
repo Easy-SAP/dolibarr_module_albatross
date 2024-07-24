@@ -5,13 +5,13 @@ namespace Albatross;
 include_once dirname(__DIR__) . '/models/EntityDTO.class.php';
 require_once DOL_DOCUMENT_ROOT . '/custom/multicompany/class/dao_multicompany.class.php';
 
-class Entity extends DaoMulticompany
+class Entity extends \DaoMulticompany
 {
 }
 
 class EntityDTOMapper
 {
-    public function toEntityDTO(\Entity $entity): EntityDTO
+    public function toEntityDTO(\DaoMulticompany $entity): EntityDTO
     {
         $entityDTO = new EntityDTO();
         $entityDTO
@@ -25,10 +25,10 @@ class EntityDTOMapper
         return $entityDTO;
     }
 
-    public function toEntity(EntityDTO $entityDTO): \Entity
+    public function toEntity(EntityDTO $entityDTO): \DaoMulticompany
     {
         global $db;
-        $entity = new \Entity($db);
+        $entity = new \DaoMulticompany($db);
 
         $entity->name = $entityDTO->getName();
         $entity->label = $entityDTO->getLabel();
@@ -56,4 +56,13 @@ class EntityDTOMapper
 
         return $entity;
     }
+
+	public function toModel(EntityDTO $entityDTO): \DaoMulticompany
+	{
+		global $db;
+		$entity = $this->toEntity($entityDTO);
+		$_POST['template'] = 1;
+
+		return $entity;
+	}
 }
