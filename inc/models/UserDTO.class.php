@@ -33,6 +33,16 @@ class UserDTO
 	 */
 	private $city;
 
+	public function __construct()
+	{
+		$this->lastname = '';
+		$this->firstname = '';
+		$this->email = '';
+		$this->phone = '';
+		$this->address = '';
+		$this->zipCode = '';
+		$this->city = '';
+	}
 
 	public function getLastname(): string
 	{

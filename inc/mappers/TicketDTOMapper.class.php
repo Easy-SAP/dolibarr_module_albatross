@@ -1,6 +1,6 @@
 <?php
 
-namespace albatross\inc\mappers;
+namespace Albatross;
 
 include_once dirname(__DIR__) . '/models/TicketDTO.class.php';
 require_once DOL_DOCUMENT_ROOT . '/ticket/class/cticketcategory.class.php';

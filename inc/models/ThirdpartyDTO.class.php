@@ -39,7 +39,19 @@ class ThirdpartyDTO
      */
     private $entity;
 
-    public function getName(): string
+	public function __construct()
+	{
+		$this->name = '';
+		$this->address = '';
+		$this->zipCode = '';
+		$this->city = '';
+		$this->email = '';
+		$this->phone = '';
+		$this->entity = 0;
+
+	}
+
+	public function getName(): string
     {
         return $this->name;
     }

@@ -1,26 +1,26 @@
 <?php
 
-//include_once dirname( __DIR__) .'/models/UserDTO.class.php';
-namespace albatross\inc\mappers;
+namespace Albatross;
+include_once dirname( __DIR__) .'/models/UserDTO.class.php';
 
 use User;
-use UserDTO;
+use Albatross\UserDTO;
 
 require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
 
 class UserDTOMapper
 {
-    public function toUserDTO(User $user): UserDTO
+    public function toUserDTO(User $newUser): UserDTO
     {
         $userDTO = new UserDTO();
         $userDTO
-            ->setFirstname($user->firstname)
-            ->setLastname($user->lastname)
-            ->setEmail($user->email)
-            ->setPhone($user->office_phone)
-            ->setAddress($user->address)
-            ->setZipCode($user->zip)
-            ->setCity($user->town);
+            ->setFirstname($newUser->firstname)
+            ->setLastname($newUser->lastname)
+            ->setEmail($newUser->email)
+            ->setPhone($newUser->office_phone)
+            ->setAddress($newUser->address)
+            ->setZipCode($newUser->zip)
+            ->setCity($newUser->town);
 
         return $userDTO;
     }
@@ -28,17 +28,17 @@ class UserDTOMapper
     public function toUser(UserDTO $userDTO): User
     {
         global $db;
-        $user = new User($db);
+        $newUser = new User($db);
 
-        $user->login = $userDTO->getFirstname();
-        $user->firstname = $userDTO->getFirstname();
-        $user->lastname = $userDTO->getLastname();
-        $user->email = $userDTO->getEmail();
-        $user->office_phone = $userDTO->getPhone();
-        $user->address = $userDTO->getAddress();
-        $user->zip = $userDTO->getZipCode();
-        $user->town = $userDTO->getCity();
+        $newUser->login = $userDTO->getFirstname();
+        $newUser->firstname = $userDTO->getFirstname();
+        $newUser->lastname = $userDTO->getLastname();
+        $newUser->email = $userDTO->getEmail();
+        $newUser->office_phone = $userDTO->getPhone();
+        $newUser->address = $userDTO->getAddress();
+        $newUser->zip = $userDTO->getZipCode();
+        $newUser->town = $userDTO->getCity();
 
-        return $user;
+        return $newUser;
     }
 }

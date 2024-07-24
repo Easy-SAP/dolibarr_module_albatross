@@ -61,7 +61,7 @@ require_once '../lib/albatross.lib.php';
 $langs->loadLangs(array("admin", "albatross@albatross"));
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
-$hookmanager->initHooks(array('albatrosssetup', 'globalsetup'));
+//$hookmanager->initHooks(array('fixturessetup', 'globalsetup'));
 
 // Access control
 if (!$user->admin) {
