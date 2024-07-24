@@ -3,7 +3,7 @@
 namespace Albatross;
 
 include_once dirname(__DIR__) . '/models/TicketDTO.class.php';
-require_once DOL_DOCUMENT_ROOT . '/ticket/class/cticketcategory.class.php';
+require_once dirname(__DIR__,4) . '/ticket/class/cticketcategory.class.php';
 
 use \Ticket;
 use Albatross\TicketDTO;

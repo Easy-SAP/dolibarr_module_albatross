@@ -6,7 +6,7 @@ namespace Albatross;
 use Product;
 use Albatross\ProductDTO;
 
-require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
+require_once dirname(__DIR__,5) . '/product/class/product.class.php';
 
 class ProductDTOMapper
 {

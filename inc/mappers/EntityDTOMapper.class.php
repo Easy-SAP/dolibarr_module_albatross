@@ -3,7 +3,7 @@
 namespace Albatross;
 
 include_once dirname(__DIR__) . '/models/EntityDTO.class.php';
-require_once DOL_DOCUMENT_ROOT . '/custom/multicompany/class/dao_multicompany.class.php';
+require_once dirname(__DIR__,4) . '/custom/multicompany/class/dao_multicompany.class.php';
 
 class Entity extends \DaoMulticompany
 {

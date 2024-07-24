@@ -59,7 +59,17 @@ class TicketDTO
      */
     private $entity_sponsor;
 
-    public function getEntityName(): string
+	public function __construct()
+	{
+		$this->user_phone = '';
+		$this->user_address = '';
+		$this->user_city = '';
+		$this->user_zipCode = 0;
+		$this->entity_sponsor = 0;
+		$this->entity_model = 0;
+	}
+
+	public function getEntityName(): string
     {
         return $this->entity_name;
     }
@@ -83,7 +93,7 @@ class TicketDTO
 
     public function getEntityModel(): int
     {
-        return $this->entity_model;
+        return $this->entity_model ?? 0;
     }
 
     public function setEntityModel(int $entity_model): TicketDTO

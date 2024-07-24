@@ -3,7 +3,7 @@
 namespace Albatross;
 
 include_once dirname(__DIR__) . '/models/ThirdpartyDTO.class.php';
-require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
+require_once dirname(__DIR__,4) . '/societe/class/societe.class.php';
 
 class ThirdpartyDTOMapper
 {

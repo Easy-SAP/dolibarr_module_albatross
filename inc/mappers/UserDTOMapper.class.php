@@ -6,7 +6,7 @@ include_once dirname( __DIR__) .'/models/UserDTO.class.php';
 use User;
 use Albatross\UserDTO;
 
-require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
+require_once dirname(__DIR__,4) . '/user/class/user.class.php';
 
 class UserDTOMapper
 {
