@@ -1,13 +1,9 @@
 <?php
 
-//include_once dirname( __DIR__) .'/models/index.php';
+namespace Albatross;
 
-use Albatross\ProductDTOMapper;
-use Commande;
-use Albatross\OrderDTO;
-use Albatross\ProductDTO;
-
-require_once dirname(__DIR__,5) . '/commande/class/commande.class.php';
+include_once dirname(__DIR__) . '/models/ProductDTO.class.php';
+require_once dirname(__DIR__,4) . '/commande/class/commande.class.php';
 require_once dirname(__DIR__,4) . '/product/class/product.class.php';
 
 class OrderDTOMapper

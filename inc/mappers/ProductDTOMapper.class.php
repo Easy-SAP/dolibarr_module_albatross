@@ -1,12 +1,9 @@
 <?php
 
-//include_once dirname( __DIR__) .'/models/ProductDTO.class.php';
 namespace Albatross;
 
-use Product;
-use Albatross\ProductDTO;
-
-require_once dirname(__DIR__,5) . '/product/class/product.class.php';
+include_once dirname(__DIR__) . '/models/ProductDTO.class.php';
+require_once dirname(__DIR__,4) . '/product/class/product.class.php';
 
 class ProductDTOMapper
 {
