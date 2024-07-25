@@ -16,7 +16,8 @@ class ThirdpartyDTOMapper
             ->setZipCode($thirdparty->zip)
             ->setCity($thirdparty->town)
             ->setEmail($thirdparty->email)
-            ->setPhone($thirdparty->phone);
+            ->setPhone($thirdparty->phone)
+			->setSiret($thirdparty->idprof2);
 
         return $thirdpartyDTO;
     }
@@ -33,12 +34,14 @@ class ThirdpartyDTOMapper
         $thirdparty->town = $thirdpartyDTO->getCity();
         $thirdparty->email = $thirdpartyDTO->getEmail();
         $thirdparty->phone = $thirdpartyDTO->getPhone();
+		$thirdparty->idprof2 = $thirdpartyDTO->getSiret();
+		$thirdparty->entity = $conf->entity;
 
         $thirdparty->country_id = 1;
         $thirdparty->client = 0;
         $thirdparty->code_fournisseur = 'auto';
         $thirdparty->fournisseur = 1;
-        $thirdparty->entity = $conf->entity;
+        $thirdparty->array_options['options_fraisservice_entity'] = $thirdpartyDTO->getEntity();
 
 		// TODO: Add Bank accounts
 
@@ -57,6 +60,7 @@ class ThirdpartyDTOMapper
 		$thirdparty->town = $thirdpartyDTO->getCity();
 		$thirdparty->email = $thirdpartyDTO->getEmail();
 		$thirdparty->phone = $thirdpartyDTO->getPhone();
+		$thirdparty->idprof2 = $thirdpartyDTO->getSiret();
 
 		$thirdparty->country_id = 1;
 		$thirdparty->client = 1;

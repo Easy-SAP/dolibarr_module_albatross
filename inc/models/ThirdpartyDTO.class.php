@@ -7,7 +7,12 @@ class ThirdpartyDTO
     /**
      * @var string
      */
-    public $name;
+    private $name;
+
+	/**
+	 * @var string
+	 */
+	private $siret;
 
     /**
      * @var string
@@ -76,6 +81,17 @@ class ThirdpartyDTO
         $this->name = $name;
         return $this;
     }
+
+	public function getSiret(): string
+	{
+		return $this->siret ?? '';
+	}
+
+	public function setSiret(string $siret): ThirdpartyDTO
+	{
+		$this->siret = $siret;
+		return $this;
+	}
 
     public function getAddress(): string
     {
