@@ -39,6 +39,8 @@ class UserDTOMapper
         $newUser->zip = $userDTO->getZipCode();
         $newUser->town = $userDTO->getCity();
 
+		$newUser->entity = 1;
+
         return $newUser;
     }
 }
