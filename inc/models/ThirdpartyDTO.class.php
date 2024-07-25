@@ -39,6 +39,21 @@ class ThirdpartyDTO
      */
     private $entity;
 
+	/**
+	 * @var string
+	 */
+	private $iban;
+
+	/**
+	 * string
+	 */
+	private $bic;
+
+	/**
+	 * @var string
+	 */
+	private $accountOwner;
+
 	public function __construct()
 	{
 		$this->name = '';
@@ -127,4 +142,37 @@ class ThirdpartyDTO
         $this->entity = $entity;
         return $this;
     }
+
+	public function getIban(): string
+	{
+		return $this->iban ?? '';
+	}
+
+	public function setIban(string $iban): ThirdpartyDTO
+	{
+		$this->iban = $iban;
+		return $this;
+	}
+
+	public function getBic()
+	{
+		return $this->bic ?? '';
+	}
+
+	public function setBic($bic)
+	{
+		$this->bic = $bic;
+		return $this;
+	}
+
+	public function getAccountOwner(): string
+	{
+		return $this->accountOwner ?? '';
+	}
+
+	public function setAccountOwner(string $accountOwner): ThirdpartyDTO
+	{
+		$this->accountOwner = $accountOwner;
+		return $this;
+	}
 }

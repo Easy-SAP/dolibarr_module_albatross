@@ -40,6 +40,8 @@ class ThirdpartyDTOMapper
         $thirdparty->fournisseur = 1;
         $thirdparty->entity = $conf->entity;
 
+		// TODO: Add Bank accounts
+
         return $thirdparty;
     }
 
@@ -60,7 +62,7 @@ class ThirdpartyDTOMapper
 		$thirdparty->client = 1;
 		$thirdparty->code_client = 'auto';
 		$thirdparty->fournisseur = 0;
-		//$thirdparty->entity = $conf->entity;
+		$thirdparty->entity = $conf->entity;
 
 		return $thirdparty;
 	}

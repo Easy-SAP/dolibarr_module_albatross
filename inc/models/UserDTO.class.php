@@ -2,8 +2,20 @@
 
 namespace Albatross;
 
+class Gender {
+	const UNDEFINED = 0;
+	const MALE = 1;
+	const FEMALE = 2;
+	const OTHER = 3;
+}
+
 class UserDTO
 {
+	/**
+	 * @var int $gender
+	 */
+	//private $gender;
+
 	/**
 	 * @var string
 	 */
@@ -118,6 +130,17 @@ class UserDTO
 	public function setCity(string $city): UserDTO
 	{
 		$this->city = $city;
+		return $this;
+	}
+
+	public function getGender(): int
+	{
+		return $this->gender ?? Gender::UNDEFINED;
+	}
+
+	public function setGender(int $gender): UserDTO
+	{
+		$this->gender = $gender;
 		return $this;
 	}
 }
