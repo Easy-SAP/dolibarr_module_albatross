@@ -30,4 +30,24 @@ class ProductDTOMapper
 
         return $product;
     }
+
+	/**
+	 * @param ProductDTO|\ServiceDTO $productDTO
+	 * @return Product
+	 */
+	public function toService($productDTO): Product
+	{
+		global $db;
+		$product = new Product($db);
+
+		$product->ref = $productDTO->getLabel();
+		$product->label = $productDTO->getLabel();
+		$product->price = $productDTO->getTaxFreePrice();
+		$product->status = 1;
+		$product->status_buy = 1;
+
+		$product->fk_product_type = \Product::TYPE_SERVICE;
+
+		return $product;
+	}
 }
