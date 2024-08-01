@@ -2,6 +2,8 @@
 
 namespace Albatross;
 
+use mysql_xdevapi\Exception;
+
 include_once dirname(__DIR__) . '/models/EntityDTO.class.php';
 require_once dirname(__DIR__,4) . '/custom/multicompany/class/dao_multicompany.class.php';
 
@@ -11,8 +13,15 @@ class Entity extends \DaoMulticompany
 
 class EntityDTOMapper
 {
-    public function toEntityDTO(\DaoMulticompany $entity): EntityDTO
+    public function toEntityDTO(\DaoMulticompany $entity): ?EntityDTO
     {
+		$requiredNotNull = ['label', 'name', 'usetemplate', 'address', 'zipcode', 'city'];
+		foreach($requiredNotNull as $field) {
+			if(is_null($entity->$field)) {
+				throw new \Exception("Field $field is required and cannot be null");
+			}
+		}
+
         $entityDTO = new EntityDTO();
         $entityDTO
             ->setLabel($entity->label)
@@ -30,8 +39,16 @@ class EntityDTOMapper
         global $db;
         $entity = new \DaoMulticompany($db);
 
+		$requiredNotNull = ['label', 'name'];
+		foreach($requiredNotNull as $field) {
+			$methodName = 'get' . ucfirst($field);
+			if(is_null($entityDTO->$methodName())) {
+				throw new \Exception("Field $field is required and cannot be null");
+			}
+		}
+
         $entity->name = $entityDTO->getName();
-        $entity->label = $entityDTO->getLabel();
+        $entity->label = $entityDTO->getLabel() ?? $entityDTO->getName();
         $entity->usetemplate = $entityDTO->getModel();
         $entity->address = $entityDTO->getAddress();
         $entity->zipcode = $entityDTO->getZipCode();
@@ -42,7 +59,7 @@ class EntityDTOMapper
         $entity->main_lang_default = 'auto';
 
         $_POST['name'] = $entityDTO->getName();
-        $_POST['label'] = $entityDTO->getLabel();
+        $_POST['label'] = $entityDTO->getLabel() ?? $entityDTO->getName();
         $_POST['usetemplate'] = $entityDTO->getModel();
         $_POST['address'] = $entityDTO->getAddress();
         $_POST['zipcode'] = $entityDTO->getZipCode();

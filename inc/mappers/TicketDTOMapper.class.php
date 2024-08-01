@@ -3,16 +3,28 @@
 namespace Albatross;
 
 include_once dirname(__DIR__) . '/models/TicketDTO.class.php';
-require_once dirname(__DIR__,4) . '/ticket/class/cticketcategory.class.php';
+require_once dirname(__DIR__,4) . '/ticket/class/ticket.class.php';
 
-use \Ticket;
+
 use Albatross\TicketDTO;
 
 class TicketDTOMapper
 {
-    public function toTicketDTO(Ticket $ticket): TicketDTO
+    public function toTicketDTO(\Ticket $ticket): TicketDTO
     {
+		$requiredFields = ['subject', 'description'];
+		foreach($requiredFields as $field) {
+			if(!isset($ticket->$field)) {
+				throw new \Exception("Missing required field: $field");
+			}
+		}
+
         $ticketDTO = new TicketDTO();
+		$ticketDTO
+			->setSubject($ticket->subject)
+			->setDescription($ticket->description)
+			->setCreationDate((new \DateTime())->setTimestamp($ticket->datec));
+
         return $ticketDTO;
     }
 }

@@ -1,0 +1,94 @@
+<?php
+
+namespace test\functional;
+
+
+use PHPUnit\Framework\TestCase;
+
+class IsolationTest extends TestCase
+{
+	public function testDTOIsolation()
+	{
+
+		$this->assertFileExists(dirname(__DIR__,2).'/inc/models/index.php');
+		require_once dirname(__DIR__,2).'/inc/models/index.php';
+
+		$this->assertThat(
+			class_exists('Albatross\EntityDTO'),
+			$this->isTrue(),
+			'Class EntityDTO does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\OrderDTO'),
+			$this->isTrue(),
+			'Class OrderDTO does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\ProductDTO'),
+			$this->isTrue(),
+			'Class ProductDTO does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\ServiceDTO'),
+			$this->isTrue(),
+			'Class ServiceDTO does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\ThirdpartyDTO'),
+			$this->isTrue(),
+			'Class ThirdpartyDTO does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\TicketDTO'),
+			$this->isTrue(),
+			'Class TicketDTO does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\UserDTO'),
+			$this->isTrue(),
+			'Class UserDTO does not exist');
+	}
+
+	public function testMappersIsolation()
+	{
+		$this->assertFileExists(dirname(__DIR__,2).'/inc/mappers/index.php');
+		define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
+
+		require_once dirname(__DIR__,2).'/inc/mappers/index.php';
+
+		$this->assertThat(
+			class_exists('Albatross\EntityDTOMapper'),
+			$this->isTrue(),
+			'Class EntityDTOMapper does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\OrderDTOMapper'),
+			$this->isTrue(),
+			'Class OrderDTOMapper does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\ProductDTOMapper'),
+			$this->isTrue(),
+			'Class ProductDTOMapper does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\ServiceDTOMapper'),
+			$this->isFalse(),
+			'Class ServiceDTOMapper does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\ThirdpartyDTOMapper'),
+			$this->isTrue(),
+			'Class ThirdpartyDTOMapper does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\TicketDTOMapper'),
+			$this->isTrue(),
+			'Class TicketDTOMapper does not exist');
+
+		$this->assertThat(
+			class_exists('Albatross\UserDTOMapper'),
+			$this->isTrue(),
+			'Class UserDTOMapper does not exist');
+	}
+}
