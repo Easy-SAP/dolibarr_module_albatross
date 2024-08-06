@@ -45,6 +45,11 @@ class UserDTO
 	 */
 	private $city;
 
+	/**
+	 * @var UserGroupDTO[] $groups
+	 */
+	private $groups;
+
 	public function __construct()
 	{
 		$this->lastname = '';
@@ -141,6 +146,32 @@ class UserDTO
 	public function setGender(int $gender): UserDTO
 	{
 		$this->gender = $gender;
+		return $this;
+	}
+
+	/**
+	 * @return UserGroupDTO[]
+	 */
+	public function getGroups()
+	{
+		return $this->groups;
+	}
+
+	public function addGroup(UserGroupDTO $group): UserDTO
+	{
+		$this->groups[] = $group;
+		return $this;
+	}
+
+	public function removeGroup(int $groupId): UserDTO
+	{
+		foreach ($this->groups as $key => $value) {
+			if ($value->getId() === $group) {
+				unset($this->groups[$key]);
+				break;
+			}
+		}
+
 		return $this;
 	}
 }
