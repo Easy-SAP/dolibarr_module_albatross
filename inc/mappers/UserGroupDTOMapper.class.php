@@ -1,5 +1,6 @@
 <?php
 
+namespace Albatross;
 include_once dirname( __DIR__) .'/models/UserGroupDTO.class.php';
 
 use Albatross\UserGroupDTO;
@@ -8,7 +9,7 @@ require_once dirname(__DIR__,4) . '/user/class/usergroup.class.php';
 
 class UserGroupDTOMapper
 {
-    public function toUserDTO(\UserGroup $userGroup): UserGroupDTO
+    public function toUserGroupDTO(\UserGroup $userGroup): UserGroupDTO
     {
         $userGroupDTO = new UserGroupDTO();
         $userGroupDTO
@@ -18,14 +19,14 @@ class UserGroupDTOMapper
         return $userGroupDTO;
     }
 
-    public function toUserGroup(UserGroupDTO $userGroupDTO): UserGroup
+    public function toUserGroup(UserGroupDTO $userGroupDTO): \UserGroup
     {
         global $db;
-        $newUserGroup = new UserGroup($db);
+		$newUserGroup = new \UserGroup($db);
 
-        $newUserGroup->id = $userGroupDTO->getId();
-        $newUserGroup->name = $userGroupDTO->getLabel();
+		$newUserGroup->id = $userGroupDTO->getId();
+		$newUserGroup->name = $userGroupDTO->getLabel();
 
-        return $newUserGroup;
+		return $newUserGroup;
     }
 }

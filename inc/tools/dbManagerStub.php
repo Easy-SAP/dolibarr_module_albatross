@@ -9,6 +9,7 @@ use Albatross\ServiceDTO;
 use Albatross\ThirdpartyDTO;
 use Albatross\TicketDTO;
 use Albatross\UserDTO;
+use Albatross\UserGroupDTO;
 use Albatross\ProductDTO;
 use Albatross\EntityDTO;
 use Albatross\Tools\intDBManager;
@@ -18,6 +19,11 @@ require_once __DIR__.'/intDBManager.php';
 class dbManagerStub implements intDBManager
 {
 	public function createUser(UserDTO $userDTO): int
+	{
+		return 1;
+	}
+
+	public function createUserGroup(UserGroupDTO $userGroupDTO): int
 	{
 		return 1;
 	}

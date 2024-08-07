@@ -39,9 +39,8 @@ class UserDTOMapper
         $newUser->zip = $userDTO->getZipCode();
         $newUser->town = $userDTO->getCity();
 
-		$userGroupMapper = new \UserGroupDTOMapper();
-		foreach ($userDTO->getGroups() as $group) {
-			$newUser->user_group_list[] = $userGroupMapper->toUserGroup($group);
+		foreach ($userDTO->getGroups() as $userGroupDTO) {
+			$newUser->user_group_list[] = $userGroupDTO->getId();
 		}
 
 		$newUser->entity = 1;

@@ -24,6 +24,8 @@ use Albatross\TicketDTO;
 use Albatross\TicketDTOMapper;
 use Albatross\UserDTO;
 use Albatross\UserDTOMapper;
+use Albatross\UserGroupDTO;
+use Albatross\UserGroupDTOMapper;
 use ExtraFields;
 use modCommande;
 use OrderDTOMapper;
@@ -49,8 +51,27 @@ class DoliDBManager implements intDBManager
         $userDTOMapper = new UserDTOMapper();
         $tmpuser = $userDTOMapper->toUser($userDTO);
 
-        return $tmpuser->create($user);
+        $res = $tmpuser->create($user);
+
+		foreach ($tmpuser->user_group_list as $groupId)
+		{
+			$tmpuser->SetInGroup($groupId, $conf->entity);
+		}
+
+		return $res;
     }
+
+	public function createUserGroup(UserGroupDTO $userGroupDTO): int
+	{
+		dol_syslog(get_class($this) . '::createUserGroup label:' . $userGroupDTO->getLabel(), LOG_INFO);
+		global $db, $user;
+
+		$userGroupDTOMapper = new UserGroupDTOMapper();
+		$tmpUserGroup = $userGroupDTOMapper->toUserGroup($userGroupDTO);
+
+		$tmpUserGroup->create($user);
+		return $tmpUserGroup->id;
+	}
 
     public function createCustomer(ThirdpartyDTO $thirdpartyDTO): int
     {
@@ -391,6 +412,7 @@ class DoliDBManager implements intDBManager
         }
 
         $toDrop = [
+			'usergroup',
             'facture_fourn_det',
             'facture_fourn',
             'facturedet',

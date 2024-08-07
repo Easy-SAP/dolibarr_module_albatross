@@ -12,10 +12,13 @@ use Albatross\ThirdpartyDTO;
 use Albatross\TicketDTO;
 use Albatross\UserDTO;
 use Albatross\EntityDTO;
+use Albatross\UserGroupDTO;
 
 interface intDBManager
 {
     public function createUser(UserDTO $userDTO): int;
+
+	public function createUserGroup(UserGroupDTO $userGroupDTO): int;
 
     public function createCustomer(ThirdpartyDTO $thirdpartyDTO): int;
 

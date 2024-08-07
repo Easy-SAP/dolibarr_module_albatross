@@ -5,7 +5,7 @@ namespace Albatross;
 class UserGroupDTO
 {
 	/**
-	 * @var int id
+	 * @var ?int id
 	 */
 	private $id;
 
@@ -14,7 +14,7 @@ class UserGroupDTO
 	 */
 	private $label;
 
-	public function getId(): int
+	public function getId(): ?int
 	{
 		return $this->id;
 	}
