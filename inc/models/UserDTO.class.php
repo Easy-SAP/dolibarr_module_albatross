@@ -14,7 +14,7 @@ class UserDTO
 	/**
 	 * @var int $gender
 	 */
-	//private $gender;
+	private $gender;
 
 	/**
 	 * @var string

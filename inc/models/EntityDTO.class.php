@@ -35,9 +35,49 @@ class EntityDTO
     private $model_id;
 
     /**
-     * @var int
+     * @var int $sponsor_id
      */
     private $sponsor_id;
+
+	/**
+	 * @var string $invoice_pattern
+	 */
+	private $invoice_pattern;
+
+	/**
+	 * @var string $replacement_invoice_pattern
+	 */
+	private $replacement_invoice_pattern;
+
+	/**
+	 * @var string $credit_note_pattern
+	 */
+	private $credit_note_pattern;
+
+	/**
+	 * @var string $down_payment_invoice_pattern
+	 */
+	private $down_payment_invoice_pattern;
+
+	/**
+	 * @var string $propal_pattern
+	 */
+	private $propal_pattern;
+
+	/**
+	 * @var string $customer_code_pattern
+	 */
+	private $customer_code_pattern;
+
+	/**
+	 * @var string $supplier_code_pattern
+	 */
+	private $supplier_code_pattern;
+
+	/**
+	 * @var bool $vat_used
+	 */
+	private $vat_used;
 
 	public function __construct()
 	{
@@ -147,4 +187,92 @@ class EntityDTO
 
         return $attributes;
     }
+
+	public function getInvoicePattern(): string
+	{
+		return $this->invoice_pattern;
+	}
+
+	public function setInvoicePattern(string $invoice_pattern): EntityDTO
+	{
+		$this->invoice_pattern = $invoice_pattern;
+		return $this;
+	}
+
+	public function getReplacementInvoicePattern(): string
+	{
+		return $this->replacement_invoice_pattern;
+	}
+
+	public function setReplacementInvoicePattern(string $replacement_invoice_pattern): EntityDTO
+	{
+		$this->replacement_invoice_pattern = $replacement_invoice_pattern;
+		return $this;
+	}
+
+	public function getCreditNotePattern(): string
+	{
+		return $this->credit_note_pattern;
+	}
+
+	public function setCreditNotePattern(string $credit_note_pattern): EntityDTO
+	{
+		$this->credit_note_pattern = $credit_note_pattern;
+		return $this;
+	}
+
+	public function getDownPaymentInvoicePattern(): string
+	{
+		return $this->down_payment_invoice_pattern;
+	}
+
+	public function setDownPaymentInvoicePattern(string $down_payment_invoice_pattern): EntityDTO
+	{
+		$this->down_payment_invoice_pattern = $down_payment_invoice_pattern;
+		return $this;
+	}
+
+	public function getPropalPattern(): string
+	{
+		return $this->propal_pattern;
+	}
+
+	public function setPropalPattern(string $propal_pattern): EntityDTO
+	{
+		$this->propal_pattern = $propal_pattern;
+		return $this;
+	}
+
+	public function getCustomerCodePattern(): string
+	{
+		return $this->customer_code_pattern;
+	}
+
+	public function setCustomerCodePattern(string $customer_code_pattern): EntityDTO
+	{
+		$this->customer_code_pattern = $customer_code_pattern;
+		return $this;
+	}
+
+	public function getSupplierCodePattern(): string
+	{
+		return $this->supplier_code_pattern;
+	}
+
+	public function setSupplierCodePattern(string $supplier_code_pattern): EntityDTO
+	{
+		$this->supplier_code_pattern = $supplier_code_pattern;
+		return $this;
+	}
+
+	public function getVatUsed(): bool
+	{
+		return $this->vat_used;
+	}
+
+	public function setVatUsed(bool $vat_used): EntityDTO
+	{
+		$this->vat_used = $vat_used;
+		return $this;
+	}
 }
