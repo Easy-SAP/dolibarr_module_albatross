@@ -10,6 +10,18 @@ use Albatross\TicketDTO;
 
 class TicketDTOMapper
 {
+	public function toTicket(TicketDTO $ticketDTO): \Ticket
+	{
+		global $db;
+
+		$ticket = new \Ticket($db);
+
+		$ticket->ref = uniqid();
+		$ticket->subject = $ticketDTO->getSubject();
+		$ticket->description = $ticketDTO->getDescription();
+
+		return $ticket;
+	}
     public function toTicketDTO(\Ticket $ticket): TicketDTO
     {
 		$requiredFields = ['subject', 'description'];

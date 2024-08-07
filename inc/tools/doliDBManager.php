@@ -20,15 +20,16 @@ use Albatross\ProductDTOMapper;
 use Albatross\ServiceDTO;
 use Albatross\ThirdpartyDTO;
 use Albatross\ThirdpartyDTOMapper;
+use Albatross\TicketDTO;
+use Albatross\TicketDTOMapper;
 use Albatross\UserDTO;
 use Albatross\UserDTOMapper;
 use ExtraFields;
-use intDBManager;
 use modCommande;
 use OrderDTOMapper;
 use User;
 
-class doliDBManager implements intDBManager
+class DoliDBManager implements intDBManager
 {
     /**
      * @var int $currentEntityId
@@ -77,8 +78,8 @@ class doliDBManager implements intDBManager
         $tmpSupplier->code_fournisseur = 'auto';
         $tmpSupplier->country_code = 1;
 
-        $tmpSupplier->create($user);
-        return $tmpSupplier->id ?? 0;
+        $res = $tmpSupplier->create($user);
+        return $tmpSupplier->id ?? $res;
     }
 
     public function createProduct(ProductDTO $productDTO): int
@@ -127,12 +128,28 @@ class doliDBManager implements intDBManager
         return 1;
     }
 
+	public function createTicket(TicketDTO $ticketDTO): int
+	{
+		global $db, $user;
+
+		if (!isModEnabled('ticket')) {
+			// We enable the module
+			require_once DOL_DOCUMENT_ROOT . '/core/modules/modTicket.class.php';
+			$mod = new modTicket($db);
+			$mod->init();
+		}
+
+		$ticketDTOMapper = new TicketDTOMapper();
+		$ticket = $ticketDTOMapper->toTicket($ticketDTO);
+		$res = $ticket->create($user);
+		return $ticket->id ?? $res;
+	}
+
     public function createEntity(EntityDTO $entityDTO, array $params = []): int
     {
         global $db, $user;
 
         $entityDTOMapper = new EntityDTOMapper();
-
 
         if ($params['isModel'] ?? false) {
             $entity = $entityDTOMapper->toModel($entityDTO);
@@ -146,6 +163,7 @@ class doliDBManager implements intDBManager
         $actionsMulticompany = new ActionsMulticompany($db);
         $action = 'add';
         $id = $actionsMulticompany->doAdminActions($action);
+		$action = 'view';
         return $id != 1 ? $id : 0;
     }
 
@@ -386,6 +404,7 @@ class doliDBManager implements intDBManager
             'societe_contacts',
             'societe_prices',
             'societe',
+			'ticket',
         ];
 
         foreach ($toDrop as $table) {
