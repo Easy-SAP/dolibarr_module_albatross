@@ -91,4 +91,35 @@ class IsolationTest extends TestCase
 			$this->isTrue(),
 			'Class UserDTOMapper does not exist');
 	}
+
+	public function testToolsIsolation()
+	{
+		$this->assertFileExists(dirname(__DIR__,2).'/inc/tools/dbManagerStub.php');
+		$this->assertFileExists(dirname(__DIR__,2).'/inc/tools/doliDBManager.php');
+		$this->assertFileExists(dirname(__DIR__,2).'/inc/tools/intDBManager.php');
+		define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
+
+		require_once dirname(__DIR__,2).'/inc/tools/intDBManager.php';
+
+		$this->assertThat(
+			interface_exists('Albatross\Tools\intDBManager'),
+			$this->isTrue(),
+			'Class intDBManager does not exist');
+
+		require_once dirname(__DIR__,2).'/inc/tools/doliDBManager.php';
+
+		$this->assertThat(
+			class_exists('Albatross\Tools\DoliDBManager'),
+			$this->isTrue(),
+			'Class DoliDBManager does not exist');
+
+
+
+		require_once dirname(__DIR__,2).'/inc/tools/dbManagerStub.php';
+
+		$this->assertThat(
+			class_exists('Albatross\Tools\dbManagerStub'),
+			$this->isTrue(),
+			'Class dbManagerStub does not exist');
+	}
 }
