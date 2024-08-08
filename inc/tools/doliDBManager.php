@@ -186,7 +186,7 @@ class DoliDBManager implements intDBManager
         $id = $actionsMulticompany->doAdminActions($action);
 		$action = 'view';
 
-		if($id <= 1) return 0;
+		if(is_null($id) || $id <= 1) return 0;
 
 		if($entityDTO->isEndPatternsWithId()) {
 			$entityDTO->setInvoicePattern($entityDTO->getReplacementInvoicePattern() . $id);
@@ -197,12 +197,50 @@ class DoliDBManager implements intDBManager
 			$entityDTO->setCustomerCodePattern($entityDTO->getCustomerCodePattern() . $id);
 			$entityDTO->setSupplierCodePattern($entityDTO->getSupplierCodePattern() . $id);
 		}
+		$this->configEntity($id, $entityDTO);
 
         return $id;
     }
 
+	private function configEntity(int $entityId, EntityDTO $entityDTO)
+	{
+		global $db;
+
+		if($entityDTO->getInvoicePattern() !== null) {
+			dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
+			dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_INVOICE', $entityDTO->getInvoicePattern(), 'chaine', 0, '', $entityId);
+		}
+		if($entityDTO->getReplacementInvoicePattern() !== null) {
+			dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
+			dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_REPLACEMENT', $entityDTO->getReplacementInvoicePattern(), 'chaine', 0, '', $entityId);
+		}
+		if($entityDTO->getCreditNotePattern() !== null) {
+			dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
+			dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_CREDIT', $entityDTO->getCreditNotePattern(), 'chaine', 0, '', $entityId);
+		}
+		if($entityDTO->getDownPaymentInvoicePattern() !== null) {
+			dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
+			dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_DEPOSIT', $entityDTO->getDownPaymentInvoicePattern(), 'chaine', 0, '', $entityId);
+		}
+
+		if($entityDTO->getPropalPattern() !== null) {
+			dolibarr_set_const($db, 'PROPALE_ADDON', 'mod_propale_saphir', 'chaine', 0, '', $entityId);
+			dolibarr_set_const($db, 'PROPALE_SAPHIR_MASK', $entityDTO->getPropalPattern(), 'chaine', 0, '', $entityId);
+		}
+
+		if($entityDTO->getCustomerCodePattern() !== null) {
+			dolibarr_set_const($db, 'SOCIETE_CODECLIENT_ADDON', 'mod_codeclient_elephant', 'chaine', 0, '', $entityId);
+			dolibarr_set_const($db, 'COMPANY_ELEPHANT_MASK_CUSTOMER', $entityDTO->getCustomerCodePattern(), 'chaine', 0, '', $entityId);
+		}
+		if($entityDTO->getSupplierCodePattern() !== null) {
+			dolibarr_set_const($db, 'SOCIETE_CODECLIENT_ADDON', 'mod_codeclient_elephant', 'chaine', 0, '', $entityId);
+			dolibarr_set_const($db, 'COMPANY_ELEPHANT_MASK_SUPPLIER', $entityDTO->getSupplierCodePattern(), 'chaine', 0, '', $entityId);
+		}
+	}
+
     public function setupEntity(int $entityId = 0, array $params = []): bool
     {
+		// TODO: Move to fixtures as it is a specific setup
         global $user, $db;
         $isMasterEntity = ($entityId == 0);
         $isEasySAPEntity = ($params['isEasySAP'] ?? false);

@@ -40,37 +40,37 @@ class EntityDTO
     private $sponsor_id;
 
 	/**
-	 * @var string $invoice_pattern
+	 * @var ?string $invoice_pattern
 	 */
 	private $invoice_pattern;
 
 	/**
-	 * @var string $replacement_invoice_pattern
+	 * @var ?string $replacement_invoice_pattern
 	 */
 	private $replacement_invoice_pattern;
 
 	/**
-	 * @var string $credit_note_pattern
+	 * @var ?string $credit_note_pattern
 	 */
 	private $credit_note_pattern;
 
 	/**
-	 * @var string $down_payment_invoice_pattern
+	 * @var ?string $down_payment_invoice_pattern
 	 */
 	private $down_payment_invoice_pattern;
 
 	/**
-	 * @var string $propal_pattern
+	 * @var ?string $propal_pattern
 	 */
 	private $propal_pattern;
 
 	/**
-	 * @var string $customer_code_pattern
+	 * @var ?string $customer_code_pattern
 	 */
 	private $customer_code_pattern;
 
 	/**
-	 * @var string $supplier_code_pattern
+	 * @var ?string $supplier_code_pattern
 	 */
 	private $supplier_code_pattern;
 
@@ -93,6 +93,7 @@ class EntityDTO
 		$this->city = '';
 		$this->model_id = 0;
 		$this->sponsor_id = 0;
+		$this->end_patterns_with_id = false;
 	}
 
 	public function getLabel(): string
@@ -193,7 +194,7 @@ class EntityDTO
         return $attributes;
     }
 
-	public function getInvoicePattern(): string
+	public function getInvoicePattern(): ?string
 	{
 		return $this->invoice_pattern;
 	}
@@ -204,7 +205,7 @@ class EntityDTO
 		return $this;
 	}
 
-	public function getReplacementInvoicePattern(): string
+	public function getReplacementInvoicePattern(): ?string
 	{
 		return $this->replacement_invoice_pattern;
 	}
@@ -215,7 +216,7 @@ class EntityDTO
 		return $this;
 	}
 
-	public function getCreditNotePattern(): string
+	public function getCreditNotePattern(): ?string
 	{
 		return $this->credit_note_pattern;
 	}
@@ -226,7 +227,7 @@ class EntityDTO
 		return $this;
 	}
 
-	public function getDownPaymentInvoicePattern(): string
+	public function getDownPaymentInvoicePattern(): ?string
 	{
 		return $this->down_payment_invoice_pattern;
 	}
@@ -237,7 +238,7 @@ class EntityDTO
 		return $this;
 	}
 
-	public function getPropalPattern(): string
+	public function getPropalPattern(): ?string
 	{
 		return $this->propal_pattern;
 	}
@@ -248,7 +249,7 @@ class EntityDTO
 		return $this;
 	}
 
-	public function getCustomerCodePattern(): string
+	public function getCustomerCodePattern(): ?string
 	{
 		return $this->customer_code_pattern;
 	}
@@ -259,7 +260,7 @@ class EntityDTO
 		return $this;
 	}
 
-	public function getSupplierCodePattern(): string
+	public function getSupplierCodePattern(): ?string
 	{
 		return $this->supplier_code_pattern;
 	}

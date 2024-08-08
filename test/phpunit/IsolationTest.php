@@ -97,7 +97,9 @@ class IsolationTest extends TestCase
 		$this->assertFileExists(dirname(__DIR__,2).'/inc/tools/dbManagerStub.php');
 		$this->assertFileExists(dirname(__DIR__,2).'/inc/tools/doliDBManager.php');
 		$this->assertFileExists(dirname(__DIR__,2).'/inc/tools/intDBManager.php');
-		define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
+		if(!defined('DOL_DOCUMENT_ROOT')) {
+			define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
+		}
 
 		require_once dirname(__DIR__,2).'/inc/tools/intDBManager.php';
 
