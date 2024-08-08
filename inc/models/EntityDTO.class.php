@@ -75,6 +75,11 @@ class EntityDTO
 	private $supplier_code_pattern;
 
 	/**
+	 * @var bool $end_patterns_with_id
+	 */
+	private $end_patterns_with_id;
+
+	/**
 	 * @var bool $vat_used
 	 */
 	private $vat_used;
@@ -262,6 +267,17 @@ class EntityDTO
 	public function setSupplierCodePattern(string $supplier_code_pattern): EntityDTO
 	{
 		$this->supplier_code_pattern = $supplier_code_pattern;
+		return $this;
+	}
+
+	public function isEndPatternsWithId(): bool
+	{
+		return $this->end_patterns_with_id;
+	}
+
+	public function setEndPatternsWithId(bool $end_patterns_with_id): EntityDTO
+	{
+		$this->end_patterns_with_id = $end_patterns_with_id;
 		return $this;
 	}
 

@@ -185,7 +185,20 @@ class DoliDBManager implements intDBManager
         $action = 'add';
         $id = $actionsMulticompany->doAdminActions($action);
 		$action = 'view';
-        return $id != 1 ? $id : 0;
+
+		if($id <= 1) return 0;
+
+		if($entityDTO->isEndPatternsWithId()) {
+			$entityDTO->setInvoicePattern($entityDTO->getReplacementInvoicePattern() . $id);
+			$entityDTO->setReplacementInvoicePattern($entityDTO->getReplacementInvoicePattern() . $id);
+			$entityDTO->setCreditNotePattern($entityDTO->getCreditNotePattern() . $id);
+			$entityDTO->setDownPaymentInvoicePattern($entityDTO->getDownPaymentInvoicePattern() . $id);
+			$entityDTO->setPropalPattern($entityDTO->getPropalPattern() . $id);
+			$entityDTO->setCustomerCodePattern($entityDTO->getCustomerCodePattern() . $id);
+			$entityDTO->setSupplierCodePattern($entityDTO->getSupplierCodePattern() . $id);
+		}
+
+        return $id;
     }
 
     public function setupEntity(int $entityId = 0, array $params = []): bool
