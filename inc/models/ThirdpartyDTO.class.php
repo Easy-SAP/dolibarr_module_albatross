@@ -59,6 +59,11 @@ class ThirdpartyDTO
 	 */
 	private $accountOwner;
 
+	/**
+	 * @var bool
+	 */
+	private $vat_used;
+
 	public function __construct()
 	{
 		$this->name = '';
@@ -189,6 +194,19 @@ class ThirdpartyDTO
 	public function setAccountOwner(string $accountOwner): ThirdpartyDTO
 	{
 		$this->accountOwner = $accountOwner;
+		return $this;
+	}
+
+
+
+	public function getVatUsed(): bool
+	{
+		return $this->vat_used;
+	}
+
+	public function setVatUsed(bool $vat_used): ThirdpartyDTO
+	{
+		$this->vat_used = $vat_used;
 		return $this;
 	}
 }

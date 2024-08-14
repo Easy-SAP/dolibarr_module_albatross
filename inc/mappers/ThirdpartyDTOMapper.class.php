@@ -17,7 +17,8 @@ class ThirdpartyDTOMapper
             ->setCity($thirdparty->town)
             ->setEmail($thirdparty->email)
             ->setPhone($thirdparty->phone)
-			->setSiret($thirdparty->idprof2);
+			->setSiret($thirdparty->idprof2)
+			->setVatUsed($thirdparty->tva_assuj == 1);
 
         return $thirdpartyDTO;
     }
@@ -35,6 +36,7 @@ class ThirdpartyDTOMapper
         $thirdparty->email = $thirdpartyDTO->getEmail();
         $thirdparty->phone = $thirdpartyDTO->getPhone();
 		$thirdparty->idprof2 = $thirdpartyDTO->getSiret();
+		$thirdparty->tva_assuj = $thirdpartyDTO->getVatUsed() ? 1 : 0;
 		$thirdparty->entity = $conf->entity;
 
         $thirdparty->country_id = 1;

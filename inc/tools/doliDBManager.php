@@ -55,7 +55,7 @@ class DoliDBManager implements intDBManager
 
 		foreach ($tmpuser->user_group_list as $groupId)
 		{
-			$tmpuser->SetInGroup($groupId, $conf->entity);
+			$tmpuser->SetInGroup($groupId, $userDTO->getEntity());
 		}
 
 		return $res;

@@ -79,11 +79,6 @@ class EntityDTO
 	 */
 	private $end_patterns_with_id;
 
-	/**
-	 * @var bool $vat_used
-	 */
-	private $vat_used;
-
 	public function __construct()
 	{
 		$this->label = '';
@@ -279,17 +274,6 @@ class EntityDTO
 	public function setEndPatternsWithId(bool $end_patterns_with_id): EntityDTO
 	{
 		$this->end_patterns_with_id = $end_patterns_with_id;
-		return $this;
-	}
-
-	public function getVatUsed(): bool
-	{
-		return $this->vat_used;
-	}
-
-	public function setVatUsed(bool $vat_used): EntityDTO
-	{
-		$this->vat_used = $vat_used;
 		return $this;
 	}
 }

@@ -50,6 +50,11 @@ class UserDTO
 	 */
 	private $groups;
 
+	/**
+	 * @var int $entity_id
+	 */
+	private $entity_id;
+
 	public function __construct()
 	{
 		$this->lastname = '';
@@ -172,6 +177,17 @@ class UserDTO
 			}
 		}
 
+		return $this;
+	}
+
+	public function getEntity(): int
+	{
+		return $this->entity_id ?? 1;
+	}
+
+	public function setEntity(int $entity_id): UserDTO
+	{
+		$this->entity_id = $entity_id;
 		return $this;
 	}
 }
