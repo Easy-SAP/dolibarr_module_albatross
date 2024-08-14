@@ -378,7 +378,31 @@ class DoliDBManager implements intDBManager
             dolibarr_set_const($db, 'MULTICOMPANY_TEMPLATE_MANAGEMENT', 1, 'int', 0, '', 0);
             dolibarr_set_const($db, 'MULTICOMPANY_VISIBLE_BY_DEFAULT', 1, 'int', 0, '', 0);
             dolibarr_set_const($db, 'MULTICOMPANY_ACTIVE_BY_DEFAULT', 1, 'int', 0, '', 0);
-        }
+
+            dolibarr_set_const($db, 'MULTICOMPANY_TRANSVERSE_MODE', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_SHARINGS_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
+
+			// Enable sharings
+            dolibarr_set_const($db, 'MULTICOMPANY_THIRDPARTY_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_CATEGORY_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_AGENDA_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_BANKACCOUNT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_TICKET_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+
+			// Sharing documents
+			dolibarr_set_const($db, 'MULTICOMPANY_PROPOSAL_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+			dolibarr_set_const($db, 'MULTICOMPANY_INVOICE_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+			dolibarr_set_const($db, 'MULTICOMPANY_ORDER_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+			dolibarr_set_const($db, 'MULTICOMPANY_CONTRACT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+
+			// By element sharing
+			dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
+			dolibarr_set_const($db, 'MULTICOMPANY_CONTACT_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
+			dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+
+		}
 
         // Set common constant
         dolibarr_set_const($db, 'MAIN_THEME', 'md', 'chaine', 0, '', $this->currentEntityId);
