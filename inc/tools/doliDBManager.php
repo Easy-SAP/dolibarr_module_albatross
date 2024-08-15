@@ -496,6 +496,8 @@ class DoliDBManager implements intDBManager
         }
 
         $toDrop = [
+			'usergroup_user',
+			'usergroup_rights',
 			'usergroup',
             'facture_fourn_det',
             'facture_fourn',
