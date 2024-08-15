@@ -60,6 +60,7 @@ class EntityDTOMapper
 
         $_POST['name'] = $entityDTO->getName();
         $_POST['label'] = $entityDTO->getLabel() ?? $entityDTO->getName();
+        $_POST['template'] = 0;
         $_POST['usetemplate'] = $entityDTO->getModel();
         $_POST['address'] = $entityDTO->getAddress();
         $_POST['zipcode'] = $entityDTO->getZipCode();
@@ -79,6 +80,7 @@ class EntityDTOMapper
 		global $db;
 		$entity = $this->toEntity($entityDTO);
 		$_POST['template'] = 1;
+		$_POST['usetemplate'] = 0;
 
 		return $entity;
 	}

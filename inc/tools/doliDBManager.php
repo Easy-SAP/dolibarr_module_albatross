@@ -75,7 +75,7 @@ class DoliDBManager implements intDBManager
 
     public function createCustomer(ThirdpartyDTO $thirdpartyDTO): int
     {
-        dol_syslog(get_class($this) . '::createThirdparty', LOG_INFO);
+        dol_syslog(get_class($this) . '::createCustomer', LOG_INFO);
 
         global $db, $user;
 
@@ -88,7 +88,7 @@ class DoliDBManager implements intDBManager
 
     public function createSupplier(ThirdpartyDTO $thirdpartyDTO): int
     {
-        dol_syslog(get_class($this) . '::createThirdparty', LOG_INFO);
+        dol_syslog(get_class($this) . '::createSupplier', LOG_INFO);
 
         global $db, $user;
 
@@ -105,6 +105,7 @@ class DoliDBManager implements intDBManager
 
     public function createProduct(ProductDTO $productDTO): int
     {
+        dol_syslog(get_class($this) . 'createProduct', LOG_INFO);
         global $db, $user;
 
         $productDTOMapper = new ProductDTOMapper();
@@ -116,6 +117,7 @@ class DoliDBManager implements intDBManager
 
     public function createService(ServiceDTO $serviceDTO): int
     {
+        dol_syslog(get_class($this) . 'createService', LOG_INFO);
         global $db, $user;
 
         $productDTOMapper = new ProductDTOMapper();
@@ -126,6 +128,7 @@ class DoliDBManager implements intDBManager
 
     public function createOrder(OrderDTO $orderDTO): int
     {
+        dol_syslog(get_class($this) . 'createOrder', LOG_INFO);
         global $db, $user;
 
         if (!isModEnabled('commande')) {
@@ -146,11 +149,13 @@ class DoliDBManager implements intDBManager
 
     public function createInvoice($invoice): int
     {
+        dol_syslog(get_class($this) . 'createInvoice', LOG_INFO);
         return 1;
     }
 
 	public function createTicket(TicketDTO $ticketDTO): int
 	{
+        dol_syslog(get_class($this) . '::createTicket', LOG_INFO);
 		global $db, $user;
 
 		if (!isModEnabled('ticket')) {
@@ -168,6 +173,7 @@ class DoliDBManager implements intDBManager
 
     public function createEntity(EntityDTO $entityDTO, array $params = []): int
     {
+        dol_syslog(get_class($this) . '::createEntity entity:' . $entityDTO->getName(), LOG_INFO);
         global $db, $user;
 
         $entityDTOMapper = new EntityDTOMapper();
@@ -198,12 +204,12 @@ class DoliDBManager implements intDBManager
 			$entityDTO->setSupplierCodePattern($entityDTO->getSupplierCodePattern() . $id);
 		}
 		$this->configEntity($id, $entityDTO);
-
         return $id;
     }
 
 	private function configEntity(int $entityId, EntityDTO $entityDTO)
 	{
+        dol_syslog(get_class($this) . '::configEntity entity:' . $entityDTO->getName(), LOG_INFO);
 		global $db;
 
 		if($entityDTO->getInvoicePattern() !== null) {
@@ -240,6 +246,7 @@ class DoliDBManager implements intDBManager
 
     public function setupEntity(int $entityId = 0, array $params = []): bool
     {
+        dol_syslog(get_class($this) . '::setupEntity $entityId:' . $entityId, LOG_INFO);
 		// TODO: Move to fixtures as it is a specific setup
         global $user, $db;
         $isMasterEntity = ($entityId == 0);
@@ -398,9 +405,9 @@ class DoliDBManager implements intDBManager
 			dolibarr_set_const($db, 'MULTICOMPANY_CONTRACT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
 
 			// By element sharing
-			dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
-			dolibarr_set_const($db, 'MULTICOMPANY_CONTACT_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
-			dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_CONTACT_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
 
 		}
 
@@ -447,6 +454,7 @@ class DoliDBManager implements intDBManager
 
     public function setSecurity(): bool
     {
+        dol_syslog(get_class($this) . '::setSecurity', LOG_INFO);
         global $db;
 
         $constArray = array(
@@ -469,6 +477,7 @@ class DoliDBManager implements intDBManager
 
     public function removeFixtures(): bool
     {
+        dol_syslog(get_class($this) . '::removeFixtures', LOG_INFO);
         global $db, $user;
 
         $tmpUser = new User($db);
@@ -542,12 +551,14 @@ class DoliDBManager implements intDBManager
      */
     private function initModules(array $modules): int
     {
+        dol_syslog(get_class($this) . '::initModules count:' . count($modules), LOG_INFO);
         global $db;
         foreach ($modules as $module) {
             $lowercaseModule = strtolower($module);
+            $modName = 'mod' . ucfirst($module);
+            dol_syslog('Initializing module :' . $modName, LOG_NOTICE);
             if (!isModEnabled($lowercaseModule)) {
                 // We enable the module
-                $modName = 'mod' . ucfirst($module);
                 $modPath = DOL_DOCUMENT_ROOT . '/core/modules/' . $modName . '.class.php';
                 $customModPath = DOL_DOCUMENT_ROOT . '/custom/' . $lowercaseModule . '/core/modules/' . $modName . '.class.php';
                 if (!file_exists($modPath) && !file_exists($customModPath)) {
@@ -562,6 +573,8 @@ class DoliDBManager implements intDBManager
                 require_once $modPath;
                 $mod = new $modName($db);
                 $mod->init();
+            } else {
+                dol_syslog('Module ' . $modName . ' is already enabled', LOG_NOTICE);
             }
         }
 
