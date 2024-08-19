@@ -15,6 +15,7 @@ use ActionsMulticompany;
 use Albatross\EntityDTO;
 use Albatross\EntityDTOMapper;
 use Albatross\OrderDTO;
+use Albatross\OrderDTOMapper;
 use Albatross\ProductDTO;
 use Albatross\ProductDTOMapper;
 use Albatross\ServiceDTO;
@@ -28,7 +29,6 @@ use Albatross\UserGroupDTO;
 use Albatross\UserGroupDTOMapper;
 use ExtraFields;
 use modCommande;
-use OrderDTOMapper;
 use User;
 
 class DoliDBManager implements intDBManager
@@ -50,7 +50,6 @@ class DoliDBManager implements intDBManager
 
         $userDTOMapper = new UserDTOMapper();
         $tmpuser = $userDTOMapper->toUser($userDTO);
-
         $res = $tmpuser->create($user);
 
         foreach ($tmpuser->user_group_list as $groupId) {
@@ -67,8 +66,8 @@ class DoliDBManager implements intDBManager
 
         $userGroupDTOMapper = new UserGroupDTOMapper();
         $tmpUserGroup = $userGroupDTOMapper->toUserGroup($userGroupDTO);
-
         $tmpUserGroup->create($user);
+
         return $tmpUserGroup->id;
     }
 
@@ -80,8 +79,8 @@ class DoliDBManager implements intDBManager
 
         $thirdpartyDTOMapper = new ThirdpartyDTOMapper();
         $tmpCustomer = $thirdpartyDTOMapper->toCustomer($thirdpartyDTO);
-
         $tmpCustomer->create($user);
+
         return $tmpCustomer->id ?? 0;
     }
 
@@ -93,12 +92,8 @@ class DoliDBManager implements intDBManager
 
         $thirdpartyDTOMapper = new ThirdpartyDTOMapper();
         $tmpSupplier = $thirdpartyDTOMapper->toSupplier($thirdpartyDTO);
-
-        $tmpSupplier->fournisseur = 1;
-        $tmpSupplier->code_fournisseur = 'auto';
-        $tmpSupplier->country_code = 1;
-
         $res = $tmpSupplier->create($user);
+
         return $tmpSupplier->id ?? $res;
     }
 
@@ -109,8 +104,8 @@ class DoliDBManager implements intDBManager
 
         $productDTOMapper = new ProductDTOMapper();
         $product = $productDTOMapper->toProduct($productDTO);
-
         $product->create($user);
+
         return $product->id ?? 0;
     }
 
@@ -122,15 +117,17 @@ class DoliDBManager implements intDBManager
         $productDTOMapper = new ProductDTOMapper();
         $product = $productDTOMapper->toService($serviceDTO);
         $product->create($user);
+
         return $product->id ?? 0;
     }
 
     public function createOrder(OrderDTO $orderDTO): int
     {
         dol_syslog(get_class($this) . 'createOrder', LOG_INFO);
-        global $db, $user;
+        global $conf, $db, $user;
 
-        if (!isModEnabled('commande')) {
+        $isModEnabled = (int) DOL_VERSION >= 16 ? isModEnabled('commande') : $conf->commande->enabled;
+        if (!$isModEnabled) {
             // We enable the module
             require_once DOL_DOCUMENT_ROOT . '/core/modules/modCommande.class.php';
             $mod = new modCommande($db);
@@ -140,6 +137,8 @@ class DoliDBManager implements intDBManager
         $orderDTOMapper = new OrderDTOMapper();
         $order = $orderDTOMapper->toOrder($orderDTO);
         $order->create($user);
+
+        // TODO: Move to fixtures
         if (rand(0, 1)) {
             $order->valid($user);
         }
@@ -155,9 +154,10 @@ class DoliDBManager implements intDBManager
     public function createTicket(TicketDTO $ticketDTO): int
     {
         dol_syslog(get_class($this) . '::createTicket', LOG_INFO);
-        global $db, $user;
+        global $conf, $db, $user;
 
-        if (!isModEnabled('ticket')) {
+        $isModEnabled = (int) DOL_VERSION >= 16 ? isModEnabled('ticket') : $conf->ticket->enabled;
+        if (!$isModEnabled) {
             // We enable the module
             require_once DOL_DOCUMENT_ROOT . '/core/modules/modTicket.class.php';
             $mod = new modTicket($db);
@@ -167,6 +167,7 @@ class DoliDBManager implements intDBManager
         $ticketDTOMapper = new TicketDTOMapper();
         $ticket = $ticketDTOMapper->toTicket($ticketDTO);
         $res = $ticket->create($user);
+
         return $ticket->id ?? $res;
     }
 
@@ -526,22 +527,26 @@ class DoliDBManager implements intDBManager
             }
         }
 
-        $sql = 'DELETE FROM ' . MAIN_DB_PREFIX . 'entity_extrafields';
-        $sql .= ' WHERE fk_object > 1';
+        $sql = $sql = 'SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = "' . MAIN_DB_PREFIX . 'entity_extrafields"';
         $resql = $db->query($sql);
-        if (!$resql) {
-            dol_syslog(get_class($this) . '::removeFixtures ' . $db->lasterror(), LOG_ERR);
-            dol_print_error($db);
-            return -1;
-        }
+        if($resql && $db->num_rows($resql) > 0) {
+            $sql = 'DELETE FROM ' . MAIN_DB_PREFIX . 'entity_extrafields';
+            $sql .= ' WHERE fk_object > 1';
+            $resql = $db->query($sql);
+            if (!$resql) {
+                dol_syslog(get_class($this) . '::removeFixtures ' . $db->lasterror(), LOG_ERR);
+                dol_print_error($db);
+                return -1;
+            }
 
-        $sql = 'DELETE FROM ' . MAIN_DB_PREFIX . 'entity';
-        $sql .= ' WHERE rowid > 1';
-        $resql = $db->query($sql);
-        if (!$resql) {
-            dol_syslog(get_class($this) . '::removeFixtures ' . $db->lasterror(), LOG_ERR);
-            dol_print_error($db);
-            return -1;
+            $sql = 'DELETE FROM ' . MAIN_DB_PREFIX . 'entity';
+            $sql .= ' WHERE rowid > 1';
+            $resql = $db->query($sql);
+            if (!$resql) {
+                dol_syslog(get_class($this) . '::removeFixtures ' . $db->lasterror(), LOG_ERR);
+                dol_print_error($db);
+                return -1;
+            }
         }
 
         return 1;
@@ -555,12 +560,13 @@ class DoliDBManager implements intDBManager
     private function initModules(array $modules): int
     {
         dol_syslog(get_class($this) . '::initModules count:' . count($modules), LOG_INFO);
-        global $db;
+        global $conf, $db;
         foreach ($modules as $module) {
             $lowercaseModule = strtolower($module);
             $modName = 'mod' . ucfirst($module);
             dol_syslog('Initializing module :' . $modName, LOG_NOTICE);
-            if (!isModEnabled($lowercaseModule)) {
+            $isModEnabled = (int) DOL_VERSION >= 16 ? isModEnabled($module) : $conf->$module->enabled;
+            if (!$isModEnabled) {
                 // We enable the module
                 $modPath = DOL_DOCUMENT_ROOT . '/core/modules/' . $modName . '.class.php';
                 $customModPath = DOL_DOCUMENT_ROOT . '/custom/' . $lowercaseModule . '/core/modules/' . $modName . '.class.php';

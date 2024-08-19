@@ -15,13 +15,13 @@ class UserDTOMapper
     {
         $userDTO = new UserDTO();
         $userDTO
-            ->setFirstname($newUser->firstname)
-            ->setLastname($newUser->lastname)
-            ->setEmail($newUser->email)
-            ->setPhone($newUser->office_phone)
-            ->setAddress($newUser->address)
-            ->setZipCode($newUser->zip)
-            ->setCity($newUser->town);
+            ->setFirstname($newUser->firstname ?? '')
+            ->setLastname($newUser->lastname ?? '')
+            ->setEmail($newUser->email ?? '')
+            ->setPhone($newUser->office_phone ?? '')
+            ->setAddress($newUser->address ?? '')
+            ->setZipCode($newUser->zip ?? '')
+            ->setCity($newUser->town ?? '');
 
         return $userDTO;
     }

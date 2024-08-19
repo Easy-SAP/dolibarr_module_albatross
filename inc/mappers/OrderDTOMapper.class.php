@@ -2,6 +2,7 @@
 
 namespace Albatross;
 
+include_once dirname(__DIR__) . '/mappers/ProductDTOMapper.class.php';
 include_once dirname(__DIR__) . '/models/ProductDTO.class.php';
 include_once dirname(__DIR__) . '/models/OrderDTO.class.php';
 require_once dirname(__DIR__, 4) . '/commande/class/commande.class.php';
@@ -13,11 +14,24 @@ class OrderDTOMapper
     {
         $orderDTO = new OrderDTO();
         $orderDTO
-            ->setQuantity($order->lines[0]->qty)
-            ->setProductId($order->lines[0]->product ?? 0)
             ->setCustomerId($order->ref_customer ?? 0)
             ->setSupplierId($order->socid ?? 0)
             ->setDate((new \DateTime())->setTimestamp($order->date));
+
+        foreach ($order->lines as $line) {
+            $orderLineDTO = new OrderLineDTO();
+            $orderLineDTO
+                ->setUnitprice($line->subprice ?? 0)
+                ->setQuantity($line->qty ?? 1)
+                ->setDescription($line->desc ?? '')
+                ->setDiscount($line->remise_percent ?? 0);
+
+            if(!is_null($line->product->id)) {
+                $orderLineDTO->setProductId($line->product->id);
+            }
+
+            $orderDTO->addOrderLine($orderLineDTO);
+        }
 
         return $orderDTO;
     }
@@ -25,23 +39,24 @@ class OrderDTOMapper
     public function toOrder(OrderDTO $orderDTO): \Commande
     {
         global $db, $user;
-        $order = new \Commande($db);
-        $orderLine = new OrderLine($db);
 
-        $product = new Product($db);
-        $product->fetch($orderDTO->getProductId());
-        $productDTOMapper = new ProductDTOMapper();
-        $productDTO = $productDTOMapper->toProductDTO($product);
+        $order = new \Commande($db);
 
         $order->date = $orderDTO->getDate()->getTimestamp();
         $order->socid = $orderDTO->getSupplierId();
         $order->ref_customer = $orderDTO->getCustomerId();
 
-        $orderLine->fk_product = $orderDTO->getProductId();
-        $orderLine->desc = $productDTO->getLabel();
-        $orderLine->subprice = $productDTO->getTaxFreePrice();
-        $orderLine->qty = $orderDTO->getQuantity();
-        $order->lines[] = $orderLine;
+        foreach ($orderDTO->getOrderLines() as $orderLineDTO) {
+            $orderLine = new \OrderLine($db);
+
+            $orderLine->fk_product = $orderLineDTO->getProductId();
+            $orderLine->desc = $orderLineDTO->getDescription();
+            $orderLine->subprice = $orderLineDTO->getUnitprice();
+            $orderLine->remise_percent = $orderLineDTO->getDiscount();
+            $orderLine->qty = $orderLineDTO->getQuantity();
+
+            $order->lines[] = $orderLine;
+        }
 
         return $order;
     }

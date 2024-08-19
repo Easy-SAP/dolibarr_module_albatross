@@ -2,6 +2,9 @@
 
 namespace Albatross;
 
+require_once __DIR__ . '/OrderLineDTO.class.php';
+use Albatross\OrderLineDTO;
+
 class OrderDTO
 {
     /**
@@ -19,23 +22,17 @@ class OrderDTO
      */
     private $supplierId;
 
-    /**
-     * @var int
-     */
-    private $productId;
-
-    /**
-     * @var int
-     */
-    private $quantity;
+	/**
+	 * @var \OrderLineDTO[]
+	 */
+	private $orderLines;
 
     public function __construct()
     {
         $this->date = new \DateTime();
-        $this->quantity = 0;
-        $this->productId = 0;
         $this->customerId = 0;
         $this->supplierId = 0;
+		$this->orderLines = [];
     }
 
     public function getDate(): \DateTime
@@ -71,25 +68,17 @@ class OrderDTO
         return $this;
     }
 
-    public function getProductId(): int
-    {
-        return $this->productId;
-    }
+	/**
+	 * @return OrderLineDTO[]
+	 */
+	public function getOrderLines(): array
+	{
+		return $this->orderLines;
+	}
 
-    public function setProductId(int $productId): OrderDTO
-    {
-        $this->productId = $productId;
-        return $this;
-    }
-
-    public function getQuantity(): int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): OrderDTO
-    {
-        $this->quantity = $quantity;
-        return $this;
-    }
+	public function addOrderLine(OrderLineDTO $orderLine): OrderDTO
+	{
+		$this->orderLines[] = $orderLine;
+		return $this;
+	}
 }

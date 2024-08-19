@@ -11,14 +11,14 @@ class ThirdpartyDTOMapper
     {
         $thirdpartyDTO = new ThirdpartyDTO();
         $thirdpartyDTO
-            ->setName($thirdparty->name)
-            ->setAddress($thirdparty->address)
-            ->setZipCode($thirdparty->zip)
-            ->setCity($thirdparty->town)
-            ->setEmail($thirdparty->email)
-            ->setPhone($thirdparty->phone)
-            ->setSiret($thirdparty->idprof2)
-            ->setVatUsed($thirdparty->tva_assuj == 1);
+            ->setName($thirdparty->name ?? '')
+            ->setAddress($thirdparty->address ?? '')
+            ->setZipCode($thirdparty->zip ?? '')
+            ->setCity($thirdparty->town ?? '')
+            ->setEmail($thirdparty->email ?? '')
+            ->setPhone($thirdparty->phone ?? '')
+            ->setSiret($thirdparty->idprof2 ?? '')
+            ->setVatUsed($thirdparty->tva_assuj ?? 1);
 
         return $thirdpartyDTO;
     }
@@ -36,7 +36,7 @@ class ThirdpartyDTOMapper
         $thirdparty->email = $thirdpartyDTO->getEmail();
         $thirdparty->phone = $thirdpartyDTO->getPhone();
         $thirdparty->idprof2 = $thirdpartyDTO->getSiret();
-        $thirdparty->tva_assuj = $thirdpartyDTO->getVatUsed() ? 1 : 0;
+        $thirdparty->tva_assuj = $thirdpartyDTO->isVatUsed() ? 1 : 0;
         $thirdparty->entity = $conf->entity;
 
         $thirdparty->country_id = 1;
@@ -63,6 +63,7 @@ class ThirdpartyDTOMapper
         $thirdparty->email = $thirdpartyDTO->getEmail();
         $thirdparty->phone = $thirdpartyDTO->getPhone();
         $thirdparty->idprof2 = $thirdpartyDTO->getSiret();
+        $thirdparty->tva_assuj = $thirdpartyDTO->isVatUsed() ? 1 : 0;
 
         $thirdparty->country_id = 1;
         $thirdparty->client = 1;

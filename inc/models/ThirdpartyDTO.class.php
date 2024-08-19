@@ -73,7 +73,7 @@ class ThirdpartyDTO
         $this->email = '';
         $this->phone = '';
         $this->entity = 0;
-
+		$this->vat_used = true;
     }
 
     public function getName(): string
@@ -197,14 +197,12 @@ class ThirdpartyDTO
         return $this;
     }
 
-
-
-    public function getVatUsed(): bool
+    public function isVatUsed(): bool
     {
         return $this->vat_used;
     }
 
-    public function setVatUsed(bool $vat_used): ThirdpartyDTO
+    public function setVatUsed(bool $vat_used = true): ThirdpartyDTO
     {
         $this->vat_used = $vat_used;
         return $this;

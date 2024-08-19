@@ -1,25 +1,11 @@
 <?php
 
+namespace Albatross;
 
 class OrderLineDTO
 {
     /**
-     * @var \DateTime
-     */
-    private $date;
-
-    /**
-     * @var int
-    */
-    private $customerId;
-
-    /**
-     * @var int
-     */
-    private $supplierId;
-
-    /**
-     * @var int
+     * @var ?int
      */
     private $productId;
 
@@ -28,49 +14,28 @@ class OrderLineDTO
      */
     private $quantity;
 
+	/**
+	 * @var string description
+	 */
+	private $description;
+
+	/**
+	 * @var int $unitprice
+	 */
+	private $unitprice;
+
+	/**
+	 * @var int discount
+	 */
+	private $discount;
+
     public function __construct()
     {
-        $this->date = new \DateTime();
-        $this->quantity = 0;
-        $this->productId = 0;
-        $this->customerId = 0;
-        $this->supplierId = 0;
+        $this->quantity = 1;
+		$this->discount = 0;
     }
 
-    public function getDate(): \DateTime
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTime $date): OrderLineDTO
-    {
-        $this->date = $date;
-        return $this;
-    }
-
-    public function getCustomerId(): int
-    {
-        return $this->customerId;
-    }
-
-    public function setCustomerId(int $customerId): OrderLineDTO
-    {
-        $this->customerId = $customerId;
-        return $this;
-    }
-
-    public function getSupplierId(): int
-    {
-        return $this->supplierId;
-    }
-
-    public function setSupplierId(int $supplierId): OrderLineDTO
-    {
-        $this->supplierId = $supplierId;
-        return $this;
-    }
-
-    public function getProductId(): int
+    public function getProductId(): ?int
     {
         return $this->productId;
     }
@@ -91,4 +56,37 @@ class OrderLineDTO
         $this->quantity = $quantity;
         return $this;
     }
+
+	public function getDescription(): string
+	{
+		return $this->description;
+	}
+
+	public function setDescription(string $description): OrderLineDTO
+	{
+		$this->description = $description;
+		return $this;
+	}
+
+	public function getUnitprice(): float
+	{
+		return $this->unitprice / 1000;
+	}
+
+	public function setUnitprice(float $unitprice): OrderLineDTO
+	{
+		$this->unitprice = $unitprice * 1000;
+		return $this;
+	}
+
+	public function getDiscount(): int
+	{
+		return $this->discount;
+	}
+
+	public function setDiscount(int $discount): OrderLineDTO
+	{
+		$this->discount = $discount;
+		return $this;
+	}
 }
