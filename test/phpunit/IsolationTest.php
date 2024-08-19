@@ -122,6 +122,8 @@ class IsolationTest extends TestCase
             'Class intDBManager does not exist'
         );
 
+        // This test will fail because multicompany module is not isolated
+        // and business logic is not separated from the database layer
         require_once dirname(__DIR__, 2).'/inc/tools/doliDBManager.php';
 
         $this->assertThat(
@@ -129,8 +131,6 @@ class IsolationTest extends TestCase
             $this->isTrue(),
             'Class DoliDBManager does not exist'
         );
-
-
 
         require_once dirname(__DIR__, 2).'/inc/tools/dbManagerStub.php';
 
