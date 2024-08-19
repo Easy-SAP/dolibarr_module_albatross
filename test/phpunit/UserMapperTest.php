@@ -35,7 +35,6 @@ class UserMapperTest extends TestCase
 
     public function testUserDTOMapperConvertsToUser()
     {
-        global $db;
         $userDTO = new \Albatross\UserDTO();
         $userDTO->setFirstname('John');
         $userDTO->setLastname('Doe');
@@ -65,13 +64,13 @@ class UserMapperTest extends TestCase
         $mapper = new \Albatross\UserDTOMapper();
         $userDTO = $mapper->toUserDTO($user);
 
-        $this->assertNull($userDTO->getFirstname());
-        $this->assertNull($userDTO->getLastname());
-        $this->assertNull($userDTO->getEmail());
-        $this->assertNull($userDTO->getPhone());
-        $this->assertNull($userDTO->getAddress());
-        $this->assertNull($userDTO->getZipCode());
-        $this->assertNull($userDTO->getCity());
+        $this->assertEmpty($userDTO->getFirstname());
+        $this->assertEmpty($userDTO->getLastname());
+        $this->assertEmpty($userDTO->getEmail());
+        $this->assertEmpty($userDTO->getPhone());
+        $this->assertEmpty($userDTO->getAddress());
+        $this->assertEmpty($userDTO->getZipCode());
+        $this->assertEmpty($userDTO->getCity());
     }
 
     public function testUserDTOMapperHandlesEmptyUserDTO()
@@ -82,12 +81,12 @@ class UserMapperTest extends TestCase
         $mapper = new \Albatross\UserDTOMapper();
         $user = $mapper->toUser($userDTO);
 
-        $this->assertNull($user->firstname);
-        $this->assertNull($user->lastname);
-        $this->assertNull($user->email);
-        $this->assertNull($user->office_phone);
-        $this->assertNull($user->address);
-        $this->assertNull($user->zip);
-        $this->assertNull($user->town);
+        $this->assertEmpty($user->firstname);
+        $this->assertEmpty($user->lastname);
+        $this->assertEmpty($user->email);
+        $this->assertEmpty($user->office_phone);
+        $this->assertEmpty($user->address);
+        $this->assertEmpty($user->zip);
+        $this->assertEmpty($user->town);
     }
 }

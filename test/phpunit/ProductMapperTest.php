@@ -11,6 +11,7 @@ class ProductMapperTest extends TestCase
 {
     public function testProductDTOMapperConvertsToProductDTO()
     {
+		global $db;
         $product = new \Product($db);
         $product->label = 'Test Product';
         $product->price = 100.0;
@@ -38,6 +39,7 @@ class ProductMapperTest extends TestCase
 
     public function testProductDTOMapperHandlesEmptyProduct()
     {
+		global $db;
         $product = new \Product($db);
         $product->label = null;
         $product->price = null;
@@ -60,6 +62,6 @@ class ProductMapperTest extends TestCase
 
         $this->assertEquals('Test Service', $service->label);
         $this->assertEquals(200.0, $service->price);
-        $this->assertEquals(\Product::TYPE_SERVICE, $service->fk_product_type);
+        $this->assertEquals(\Product::TYPE_SERVICE, $service->type);
     }
 }

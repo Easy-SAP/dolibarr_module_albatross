@@ -18,11 +18,15 @@ class IsolationTest extends TestCase
             'Class EntityDTO does not exist'
         );
 
+        $entityDTO = new \Albatross\EntityDTO();
+
         $this->assertThat(
             class_exists('Albatross\OrderDTO'),
             $this->isTrue(),
             'Class OrderDTO does not exist'
         );
+
+        $orderDTO = new \Albatross\OrderDTO();
 
         $this->assertThat(
             class_exists('Albatross\ProductDTO'),
@@ -30,11 +34,15 @@ class IsolationTest extends TestCase
             'Class ProductDTO does not exist'
         );
 
+        $productDTO = new \Albatross\ProductDTO();
+
         $this->assertThat(
             class_exists('Albatross\ServiceDTO'),
             $this->isTrue(),
             'Class ServiceDTO does not exist'
         );
+
+        $serviceDTO = new \Albatross\ServiceDTO();
 
         $this->assertThat(
             class_exists('Albatross\ThirdpartyDTO'),
@@ -42,17 +50,23 @@ class IsolationTest extends TestCase
             'Class ThirdpartyDTO does not exist'
         );
 
+        $thirdpartyDTO = new \Albatross\ThirdpartyDTO();
+
         $this->assertThat(
             class_exists('Albatross\TicketDTO'),
             $this->isTrue(),
             'Class TicketDTO does not exist'
         );
 
+        $ticketDTO = new \Albatross\TicketDTO();
+
         $this->assertThat(
             class_exists('Albatross\UserDTO'),
             $this->isTrue(),
             'Class UserDTO does not exist'
         );
+
+        $userDTO = new \Albatross\UserDTO();
     }
 
     public function testMappersIsolation()
