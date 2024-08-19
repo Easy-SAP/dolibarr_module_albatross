@@ -11,7 +11,7 @@ class ProductMapperTest extends TestCase
 {
     public function testProductDTOMapperConvertsToProductDTO()
     {
-		global $db;
+        global $db;
         $product = new \Product($db);
         $product->label = 'Test Product';
         $product->price = 100.0;
@@ -39,7 +39,7 @@ class ProductMapperTest extends TestCase
 
     public function testProductDTOMapperHandlesEmptyProduct()
     {
-		global $db;
+        global $db;
         $product = new \Product($db);
         $product->label = null;
         $product->price = null;

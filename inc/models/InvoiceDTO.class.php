@@ -2,10 +2,10 @@
 
 namespace Albatross;
 
-require_once __DIR__ . '/OrderLineDTO.class.php';
-use Albatross\OrderLineDTO;
+require_once __DIR__ . '/InvoiceLineDTO.class.php';
+use Albatross\InvoiceLineDTO;
 
-class OrderDTO
+class InvoiceDTO
 {
     /**
      * @var \DateTime
@@ -23,16 +23,16 @@ class OrderDTO
     private $supplierId;
 
     /**
-     * @var \OrderLineDTO[]
+     * @var \InvoiceLineDTO[]
      */
-    private $orderLines;
+    private $invoiceLines;
 
     public function __construct()
     {
         $this->date = new \DateTime();
         $this->customerId = 0;
         $this->supplierId = 0;
-        $this->orderLines = [];
+        $this->invoiceLines = [];
     }
 
     public function getDate(): \DateTime
@@ -40,7 +40,7 @@ class OrderDTO
         return $this->date;
     }
 
-    public function setDate(\DateTime $date): OrderDTO
+    public function setDate(\DateTime $date): InvoiceDTO
     {
         $this->date = $date;
         return $this;
@@ -51,7 +51,7 @@ class OrderDTO
         return $this->customerId;
     }
 
-    public function setCustomerId(int $customerId): OrderDTO
+    public function setCustomerId(int $customerId): InvoiceDTO
     {
         $this->customerId = $customerId;
         return $this;
@@ -62,23 +62,23 @@ class OrderDTO
         return $this->supplierId;
     }
 
-    public function setSupplierId(int $supplierId): OrderDTO
+    public function setSupplierId(int $supplierId): InvoiceDTO
     {
         $this->supplierId = $supplierId;
         return $this;
     }
 
     /**
-     * @return OrderLineDTO[]
+     * @return InvoiceLineDTO[]
      */
-    public function getOrderLines(): array
+    public function getInvoiceLines(): array
     {
-        return $this->orderLines;
+        return $this->invoiceLines;
     }
 
-    public function addOrderLine(OrderLineDTO $orderLine): OrderDTO
+    public function addInvoiceLine(InvoiceLineDTO $invoiceLine): InvoiceDTO
     {
-        $this->orderLines[] = $orderLine;
+        $this->invoiceLines[] = $invoiceLine;
         return $this;
     }
 }

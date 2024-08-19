@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__.'/EntityDTO.class.php';
+require_once __DIR__.'/InvoiceDTO.class.php';
+require_once __DIR__.'/InvoiceLineDTO.class.php';
 require_once __DIR__.'/OrderDTO.class.php';
 require_once __DIR__.'/OrderLineDTO.class.php';
 require_once __DIR__.'/ProductDTO.class.php';

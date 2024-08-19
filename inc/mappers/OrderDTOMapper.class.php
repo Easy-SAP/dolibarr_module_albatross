@@ -2,11 +2,8 @@
 
 namespace Albatross;
 
-include_once dirname(__DIR__) . '/mappers/ProductDTOMapper.class.php';
-include_once dirname(__DIR__) . '/models/ProductDTO.class.php';
 include_once dirname(__DIR__) . '/models/OrderDTO.class.php';
 require_once dirname(__DIR__, 4) . '/commande/class/commande.class.php';
-require_once dirname(__DIR__, 4) . '/product/class/product.class.php';
 
 class OrderDTOMapper
 {

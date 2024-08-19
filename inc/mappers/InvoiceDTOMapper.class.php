@@ -1,0 +1,63 @@
+<?php
+
+namespace Albatross;
+
+use Albatross\InvoiceDTO;
+use Albatross\InvoiceLineDTO;
+
+include_once dirname(__DIR__) . '/models/InvoiceDTO.class.php';
+require_once dirname(__DIR__, 4) . '/compta/facture/class/facture.class.php';
+
+class InvoiceDTOMapper
+{
+    public function toInvoiceDTO(\Facture $invoice): InvoiceDTO
+    {
+        $invoiceDTO = new InvoiceDTO();
+        $invoiceDTO
+            ->setCustomerId($invoice->ref_customer ?? 0)
+            ->setSupplierId($invoice->socid ?? 0)
+            ->setDate((new \DateTime())->setTimestamp($invoice->date));
+
+        foreach ($invoice->lines as $line) {
+            $invoiceLineDTO = new InvoiceLineDTO();
+            $invoiceLineDTO
+                ->setUnitprice($line->subprice ?? 0)
+                ->setQuantity($line->qty ?? 1)
+                ->setDescription($line->desc ?? '')
+                ->setDiscount($line->remise_percent ?? 0);
+
+            if(!is_null($line->product->id)) {
+                $invoiceLineDTO->setProductId($line->product->id);
+            }
+
+            $invoiceDTO->addInvoiceLine($invoiceLineDTO);
+        }
+
+        return $invoiceDTO;
+    }
+
+    public function toInvoice(InvoiceDTO $invoiceDTO): \Facture
+    {
+        global $db, $user;
+
+        $invoice = new \Facture($db);
+
+        $invoice->date = $invoiceDTO->getDate()->getTimestamp();
+        $invoice->socid = $invoiceDTO->getSupplierId();
+        $invoice->ref_customer = $invoiceDTO->getCustomerId();
+
+        foreach ($invoiceDTO->getInvoiceLines() as $invoiceLineDTO) {
+            $invoiceLine = new \FactureLigne($db);
+
+            $invoiceLine->fk_product = $invoiceLineDTO->getProductId();
+            $invoiceLine->desc = $invoiceLineDTO->getDescription();
+            $invoiceLine->subprice = $invoiceLineDTO->getUnitprice();
+            $invoiceLine->remise_percent = $invoiceLineDTO->getDiscount();
+            $invoiceLine->qty = $invoiceLineDTO->getQuantity();
+
+            $invoice->lines[] = $invoiceLine;
+        }
+
+        return $invoice;
+    }
+}

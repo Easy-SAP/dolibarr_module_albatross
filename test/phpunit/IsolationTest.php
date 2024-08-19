@@ -8,115 +8,60 @@ class IsolationTest extends TestCase
 {
     public function testDTOIsolation()
     {
+        $dtoIndexPath = dirname(__DIR__, 2).'/inc/models/index.php';
+        $dtoFolderPath = dirname($dtoIndexPath);
 
-        $this->assertFileExists(dirname(__DIR__, 2).'/inc/models/index.php');
-        require_once dirname(__DIR__, 2).'/inc/models/index.php';
+        $this->assertFileExists($dtoIndexPath);
+        require_once $dtoIndexPath;
 
-        $this->assertThat(
-            class_exists('Albatross\EntityDTO'),
-            $this->isTrue(),
-            'Class EntityDTO does not exist'
-        );
+        $dtoFileList = scandir($dtoFolderPath);
+        $dtoList = [];
+        foreach ($dtoFileList as $dtoFile) {
+            if(preg_match('/\.class\.php/', $dtoFile)) {
+                $dto = preg_replace('/\.class\.php/', '', $dtoFile);
+                $dtoList[] = $dto;
+            }
+        }
 
-        $entityDTO = new \Albatross\EntityDTO();
-
-        $this->assertThat(
-            class_exists('Albatross\OrderDTO'),
-            $this->isTrue(),
-            'Class OrderDTO does not exist'
-        );
-
-        $orderDTO = new \Albatross\OrderDTO();
-
-        $this->assertThat(
-            class_exists('Albatross\ProductDTO'),
-            $this->isTrue(),
-            'Class ProductDTO does not exist'
-        );
-
-        $productDTO = new \Albatross\ProductDTO();
-
-        $this->assertThat(
-            class_exists('Albatross\ServiceDTO'),
-            $this->isTrue(),
-            'Class ServiceDTO does not exist'
-        );
-
-        $serviceDTO = new \Albatross\ServiceDTO();
-
-        $this->assertThat(
-            class_exists('Albatross\ThirdpartyDTO'),
-            $this->isTrue(),
-            'Class ThirdpartyDTO does not exist'
-        );
-
-        $thirdpartyDTO = new \Albatross\ThirdpartyDTO();
-
-        $this->assertThat(
-            class_exists('Albatross\TicketDTO'),
-            $this->isTrue(),
-            'Class TicketDTO does not exist'
-        );
-
-        $ticketDTO = new \Albatross\TicketDTO();
-
-        $this->assertThat(
-            class_exists('Albatross\UserDTO'),
-            $this->isTrue(),
-            'Class UserDTO does not exist'
-        );
-
-        $userDTO = new \Albatross\UserDTO();
+        // We control that all DTOs are in index.php
+        // Errors will be automaticly thrown if isolation is not respected
+        foreach ($dtoList as $dto) {
+            $this->assertThat(
+                class_exists('Albatross\\'.$dto),
+                $this->isTrue(),
+                'Class '.$dto.' has been created but it is not in index.php or namespace is wrong'
+            );
+        }
     }
 
     public function testMappersIsolation()
     {
-        $this->assertFileExists(dirname(__DIR__, 2).'/inc/mappers/index.php');
+        $mappersIndexPath = dirname(__DIR__, 2).'/inc/mappers/index.php';
+        $mappersFolderPath = dirname($mappersIndexPath);
+
+        $this->assertFileExists($mappersIndexPath);
         define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
 
-        require_once dirname(__DIR__, 2).'/inc/mappers/index.php';
+        require_once $mappersIndexPath;
 
-        $this->assertThat(
-            class_exists('Albatross\EntityDTOMapper'),
-            $this->isTrue(),
-            'Class EntityDTOMapper does not exist'
-        );
+        $mapperFileList = scandir($mappersFolderPath);
+        $mapperList = [];
+        foreach ($mapperFileList as $mapperFile) {
+            if(preg_match('/\.class\.php/', $mapperFile)) {
+                $mapper = preg_replace('/\.class\.php/', '', $mapperFile);
+                $mapperList[] = $mapper;
+            }
+        }
 
-        $this->assertThat(
-            class_exists('Albatross\OrderDTOMapper'),
-            $this->isTrue(),
-            'Class OrderDTOMapper does not exist'
-        );
-
-        $this->assertThat(
-            class_exists('Albatross\ProductDTOMapper'),
-            $this->isTrue(),
-            'Class ProductDTOMapper does not exist'
-        );
-
-        $this->assertThat(
-            class_exists('Albatross\ServiceDTOMapper'),
-            $this->isFalse(),
-            'Class ServiceDTOMapper does not exist'
-        );
-
-        $this->assertThat(
-            class_exists('Albatross\ThirdpartyDTOMapper'),
-            $this->isTrue(),
-            'Class ThirdpartyDTOMapper does not exist'
-        );
-
-        $this->assertThat(
-            class_exists('Albatross\TicketDTOMapper'),
-            $this->isTrue(),
-            'Class TicketDTOMapper does not exist'
-        );
-
-        $this->assertThat(
-            class_exists('Albatross\UserDTOMapper'),
-            $this->isTrue(),
-            'Class UserDTOMapper does not exist'
-        );
+        // We control that all mappers are in index.php
+        // Errors will be automaticly thrown if isolation is not respected
+        foreach ($mapperList as $mapper) {
+            $this->assertThat(
+                class_exists('Albatross\\'.$mapper),
+                $this->isTrue(),
+                'Class '.$mapper.' has been created but it is not in index.php or namespace is wrong'
+            );
+        }
     }
 
     public function testToolsIsolation()

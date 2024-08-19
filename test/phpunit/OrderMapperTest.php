@@ -25,71 +25,71 @@ class OrderMapperTest extends TestCase
         $mapper = new \Albatross\OrderDTOMapper();
         $orderDTO = $mapper->toOrderDTO($order);
 
-		$this->assertEquals(100, $orderDTO->getCustomerId());
-		$this->assertEquals(200, $orderDTO->getSupplierId());
-		$this->assertEquals((new \DateTime())->setTimestamp($order->date), $orderDTO->getDate());
+        $this->assertEquals(100, $orderDTO->getCustomerId());
+        $this->assertEquals(200, $orderDTO->getSupplierId());
+        $this->assertEquals((new \DateTime())->setTimestamp($order->date), $orderDTO->getDate());
 
-		// Line 1
-		$this->assertEquals(10, $orderDTO->getOrderLines()[0]->getQuantity());
-		$this->assertEquals(1, $orderDTO->getOrderLines()[0]->getProductId());
-		// Line 2
-		$this->assertEquals(5, $orderDTO->getOrderLines()[1]->getQuantity());
-		$this->assertEquals(2, $orderDTO->getOrderLines()[1]->getProductId());
+        // Line 1
+        $this->assertEquals(10, $orderDTO->getOrderLines()[0]->getQuantity());
+        $this->assertEquals(1, $orderDTO->getOrderLines()[0]->getProductId());
+        // Line 2
+        $this->assertEquals(5, $orderDTO->getOrderLines()[1]->getQuantity());
+        $this->assertEquals(2, $orderDTO->getOrderLines()[1]->getProductId());
     }
 
-	public function testOrderDTOMapperConvertsToOrder()
-	{
-		$date = new \DateTime();
-		$orderDTO = new \Albatross\OrderDTO();
-		$orderDTO
-			->setCustomerId(100)
-			->setSupplierId(200)
-			->setDate($date);
+    public function testOrderDTOMapperConvertsToOrder()
+    {
+        $date = new \DateTime();
+        $orderDTO = new \Albatross\OrderDTO();
+        $orderDTO
+            ->setCustomerId(100)
+            ->setSupplierId(200)
+            ->setDate($date);
 
-		$orderLineDTO1 = new \Albatross\OrderLineDTO();
-		$orderLineDTO1
-			->setQuantity(10)
-			->setProductId(1)
-			->setDescription('Desc')
-			->setUnitprice(12.5);
+        $orderLineDTO1 = new \Albatross\OrderLineDTO();
+        $orderLineDTO1
+            ->setQuantity(10)
+            ->setProductId(1)
+            ->setDescription('Desc')
+            ->setUnitprice(12.5);
 
-		$orderLineDTO2 = new \Albatross\OrderLineDTO();
-		$orderLineDTO2
-			->setQuantity(5)
-			->setProductId(2)
-			->setDescription('Desc')
-			->setUnitprice(12.5)
-			->setDiscount(10);
+        $orderLineDTO2 = new \Albatross\OrderLineDTO();
+        $orderLineDTO2
+            ->setQuantity(5)
+            ->setProductId(2)
+            ->setDescription('Desc')
+            ->setUnitprice(12.5)
+            ->setDiscount(10);
 
-		$orderDTO
-			->addOrderLine($orderLineDTO1)
-			->addOrderLine($orderLineDTO2);
+        $orderDTO
+            ->addOrderLine($orderLineDTO1)
+            ->addOrderLine($orderLineDTO2);
 
-		$mapper = new \Albatross\OrderDTOMapper();
-		$order = $mapper->toOrder($orderDTO);
+        $mapper = new \Albatross\OrderDTOMapper();
+        $order = $mapper->toOrder($orderDTO);
 
-		$this->assertEquals(100, $order->ref_customer);
-		$this->assertEquals(200, $order->socid);
-		$this->assertEquals($date->getTimestamp(), $order->date);
+        $this->assertEquals(100, $order->ref_customer);
+        $this->assertEquals(200, $order->socid);
+        $this->assertEquals($date->getTimestamp(), $order->date);
 
-		// Line 1
-		$this->assertEquals(1, $order->lines[0]->fk_product);
-		$this->assertEquals('Desc', $order->lines[0]->desc);
-		$this->assertEquals(12.500, $order->lines[0]->subprice);
-		$this->assertEquals(10, $order->lines[0]->qty);
-		$this->assertEquals(0, $order->lines[0]->remise_percent);
-		// Line 2
-		$this->assertEquals(2, $order->lines[1]->fk_product);
-		$this->assertEquals('Desc', $order->lines[1]->desc);
-		$this->assertEquals(12.500, $order->lines[1]->subprice);
-		$this->assertEquals(5, $order->lines[1]->qty);
-		$this->assertEquals(10, $order->lines[1]->remise_percent);
+        // Line 1
+        $this->assertEquals(1, $order->lines[0]->fk_product);
+        $this->assertEquals('Desc', $order->lines[0]->desc);
+        $this->assertEquals(12.500, $order->lines[0]->subprice);
+        $this->assertEquals(10, $order->lines[0]->qty);
+        $this->assertEquals(0, $order->lines[0]->remise_percent);
+        // Line 2
+        $this->assertEquals(2, $order->lines[1]->fk_product);
+        $this->assertEquals('Desc', $order->lines[1]->desc);
+        $this->assertEquals(12.500, $order->lines[1]->subprice);
+        $this->assertEquals(5, $order->lines[1]->qty);
+        $this->assertEquals(10, $order->lines[1]->remise_percent);
 
-	}
+    }
 
     public function testOrderDTOMapperHandlesNullOrder()
     {
-		global $db;
+        global $db;
         $order = new \Commande($db);
         $order->lines = null;
         $order->ref_customer = null;
@@ -101,31 +101,31 @@ class OrderMapperTest extends TestCase
 
         $this->assertEquals(0, $orderDTO->getCustomerId());
         $this->assertEquals(0, $orderDTO->getSupplierId());
-		$this->assertEmpty($orderDTO->getOrderLines());
+        $this->assertEmpty($orderDTO->getOrderLines());
         //$this->assertNull($orderDTO->getDate());
     }
 
-	/**
-	 * An object can be translated first with partial data and filled later so we have to handle null values
-	 * @return void
-	 */
-	public function testOrderDTOMapperHandlesNullOrderDTO()
-	{
-		$date = new \DateTime();
-		$orderDTO = new \Albatross\OrderDTO();
+    /**
+     * An object can be translated first with partial data and filled later so we have to handle null values
+     * @return void
+     */
+    public function testOrderDTOMapperHandlesNullOrderDTO()
+    {
+        $date = new \DateTime();
+        $orderDTO = new \Albatross\OrderDTO();
 
-		$mapper = new \Albatross\OrderDTOMapper();
-		$order = $mapper->toOrder($orderDTO);
+        $mapper = new \Albatross\OrderDTOMapper();
+        $order = $mapper->toOrder($orderDTO);
 
-		$this->assertEquals(0, $order->ref_customer);
-		$this->assertEquals(0, $order->socid);
-		$this->assertEquals($date->getTimestamp(), $order->date);
-		$this->assertEmpty($order->lines);
-	}
+        $this->assertEquals(0, $order->ref_customer);
+        $this->assertEquals(0, $order->socid);
+        $this->assertEquals($date->getTimestamp(), $order->date);
+        $this->assertEmpty($order->lines);
+    }
 
     public function testOrderDTOMapperHandlesInvalidOrderLine()
     {
-		global $db;
+        global $db;
         $order = new \Commande($db);
         $order->lines = [(object)['qty' => null, 'product' => null]];
         $order->ref_customer = 100;
@@ -135,14 +135,14 @@ class OrderMapperTest extends TestCase
         $mapper = new \Albatross\OrderDTOMapper();
         $orderDTO = $mapper->toOrderDTO($order);
 
-		$this->assertEquals(100, $orderDTO->getCustomerId());
-		$this->assertEquals(200, $orderDTO->getSupplierId());
-		$this->assertEquals((new \DateTime())->setTimestamp($order->date), $orderDTO->getDate());
+        $this->assertEquals(100, $orderDTO->getCustomerId());
+        $this->assertEquals(200, $orderDTO->getSupplierId());
+        $this->assertEquals((new \DateTime())->setTimestamp($order->date), $orderDTO->getDate());
 
-		$this->assertEquals(0, $orderDTO->getOrderLines()[0]->getUnitprice());
-		$this->assertEquals(1, $orderDTO->getOrderLines()[0]->getQuantity());
-		$this->assertNull($orderDTO->getOrderLines()[0]->getProductId());
-		$this->assertEquals(0, $orderDTO->getOrderLines()[0]->getDiscount());
-		$this->assertEquals('', $orderDTO->getOrderLines()[0]->getDescription());
-	}
+        $this->assertEquals(0, $orderDTO->getOrderLines()[0]->getUnitprice());
+        $this->assertEquals(1, $orderDTO->getOrderLines()[0]->getQuantity());
+        $this->assertNull($orderDTO->getOrderLines()[0]->getProductId());
+        $this->assertEquals(0, $orderDTO->getOrderLines()[0]->getDiscount());
+        $this->assertEquals('', $orderDTO->getOrderLines()[0]->getDescription());
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace Albatross;
 
-class OrderLineDTO
+class InvoiceLineDTO
 {
     /**
      * @var ?int
@@ -40,7 +40,7 @@ class OrderLineDTO
         return $this->productId;
     }
 
-    public function setProductId(int $productId): OrderLineDTO
+    public function setProductId(int $productId): InvoiceLineDTO
     {
         $this->productId = $productId;
         return $this;
@@ -51,7 +51,7 @@ class OrderLineDTO
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): OrderLineDTO
+    public function setQuantity(int $quantity): InvoiceLineDTO
     {
         $this->quantity = $quantity;
         return $this;
@@ -62,7 +62,7 @@ class OrderLineDTO
         return $this->description;
     }
 
-    public function setDescription(string $description): OrderLineDTO
+    public function setDescription(string $description): InvoiceLineDTO
     {
         $this->description = $description;
         return $this;
@@ -73,7 +73,7 @@ class OrderLineDTO
         return $this->unitprice / 1000;
     }
 
-    public function setUnitprice(float $unitprice): OrderLineDTO
+    public function setUnitprice(float $unitprice): InvoiceLineDTO
     {
         $this->unitprice = $unitprice * 1000;
         return $this;
@@ -84,7 +84,7 @@ class OrderLineDTO
         return $this->discount;
     }
 
-    public function setDiscount(int $discount): OrderLineDTO
+    public function setDiscount(int $discount): InvoiceLineDTO
     {
         $this->discount = $discount;
         return $this;
