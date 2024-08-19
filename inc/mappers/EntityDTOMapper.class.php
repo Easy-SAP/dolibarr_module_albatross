@@ -5,7 +5,7 @@ namespace Albatross;
 use mysql_xdevapi\Exception;
 
 include_once dirname(__DIR__) . '/models/EntityDTO.class.php';
-require_once dirname(__DIR__,4) . '/custom/multicompany/class/dao_multicompany.class.php';
+require_once dirname(__DIR__, 4) . '/custom/multicompany/class/dao_multicompany.class.php';
 
 class Entity extends \DaoMulticompany
 {
@@ -15,12 +15,12 @@ class EntityDTOMapper
 {
     public function toEntityDTO(\DaoMulticompany $entity): ?EntityDTO
     {
-		$requiredNotNull = ['label', 'name', 'usetemplate', 'address', 'zipcode', 'city'];
-		foreach($requiredNotNull as $field) {
-			if(is_null($entity->$field)) {
-				throw new \Exception("Field $field is required and cannot be null");
-			}
-		}
+        $requiredNotNull = ['label', 'name', 'usetemplate', 'address', 'zipcode', 'city'];
+        foreach($requiredNotNull as $field) {
+            if(is_null($entity->$field)) {
+                throw new \Exception("Field $field is required and cannot be null");
+            }
+        }
 
         $entityDTO = new EntityDTO();
         $entityDTO
@@ -39,13 +39,13 @@ class EntityDTOMapper
         global $db;
         $entity = new \DaoMulticompany($db);
 
-		$requiredNotNull = ['label', 'name'];
-		foreach($requiredNotNull as $field) {
-			$methodName = 'get' . ucfirst($field);
-			if(is_null($entityDTO->$methodName())) {
-				throw new \Exception("Field $field is required and cannot be null");
-			}
-		}
+        $requiredNotNull = ['label', 'name'];
+        foreach($requiredNotNull as $field) {
+            $methodName = 'get' . ucfirst($field);
+            if(is_null($entityDTO->$methodName())) {
+                throw new \Exception("Field $field is required and cannot be null");
+            }
+        }
 
         $entity->name = $entityDTO->getName();
         $entity->label = $entityDTO->getLabel() ?? $entityDTO->getName();
@@ -75,13 +75,13 @@ class EntityDTOMapper
         return $entity;
     }
 
-	public function toModel(EntityDTO $entityDTO): \DaoMulticompany
-	{
-		global $db;
-		$entity = $this->toEntity($entityDTO);
-		$_POST['template'] = 1;
-		$_POST['usetemplate'] = 0;
+    public function toModel(EntityDTO $entityDTO): \DaoMulticompany
+    {
+        global $db;
+        $entity = $this->toEntity($entityDTO);
+        $_POST['template'] = 1;
+        $_POST['usetemplate'] = 0;
 
-		return $entity;
-	}
+        return $entity;
+    }
 }

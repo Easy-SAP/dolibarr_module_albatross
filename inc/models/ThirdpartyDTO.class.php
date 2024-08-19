@@ -9,10 +9,10 @@ class ThirdpartyDTO
      */
     private $name;
 
-	/**
-	 * @var string
-	 */
-	private $siret;
+    /**
+     * @var string
+     */
+    private $siret;
 
     /**
      * @var string
@@ -44,39 +44,39 @@ class ThirdpartyDTO
      */
     private $entity;
 
-	/**
-	 * @var string
-	 */
-	private $iban;
+    /**
+     * @var string
+     */
+    private $iban;
 
-	/**
-	 * string
-	 */
-	private $bic;
+    /**
+     * string
+     */
+    private $bic;
 
-	/**
-	 * @var string
-	 */
-	private $accountOwner;
+    /**
+     * @var string
+     */
+    private $accountOwner;
 
-	/**
-	 * @var bool
-	 */
-	private $vat_used;
+    /**
+     * @var bool
+     */
+    private $vat_used;
 
-	public function __construct()
-	{
-		$this->name = '';
-		$this->address = '';
-		$this->zipCode = '';
-		$this->city = '';
-		$this->email = '';
-		$this->phone = '';
-		$this->entity = 0;
+    public function __construct()
+    {
+        $this->name = '';
+        $this->address = '';
+        $this->zipCode = '';
+        $this->city = '';
+        $this->email = '';
+        $this->phone = '';
+        $this->entity = 0;
 
-	}
+    }
 
-	public function getName(): string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -87,16 +87,16 @@ class ThirdpartyDTO
         return $this;
     }
 
-	public function getSiret(): string
-	{
-		return $this->siret ?? '';
-	}
+    public function getSiret(): string
+    {
+        return $this->siret ?? '';
+    }
 
-	public function setSiret(string $siret): ThirdpartyDTO
-	{
-		$this->siret = $siret;
-		return $this;
-	}
+    public function setSiret(string $siret): ThirdpartyDTO
+    {
+        $this->siret = $siret;
+        return $this;
+    }
 
     public function getAddress(): string
     {
@@ -164,49 +164,49 @@ class ThirdpartyDTO
         return $this;
     }
 
-	public function getIban(): string
-	{
-		return $this->iban ?? '';
-	}
+    public function getIban(): string
+    {
+        return $this->iban ?? '';
+    }
 
-	public function setIban(string $iban): ThirdpartyDTO
-	{
-		$this->iban = $iban;
-		return $this;
-	}
+    public function setIban(string $iban): ThirdpartyDTO
+    {
+        $this->iban = $iban;
+        return $this;
+    }
 
-	public function getBic()
-	{
-		return $this->bic ?? '';
-	}
+    public function getBic()
+    {
+        return $this->bic ?? '';
+    }
 
-	public function setBic($bic)
-	{
-		$this->bic = $bic;
-		return $this;
-	}
+    public function setBic($bic)
+    {
+        $this->bic = $bic;
+        return $this;
+    }
 
-	public function getAccountOwner(): string
-	{
-		return $this->accountOwner ?? '';
-	}
+    public function getAccountOwner(): string
+    {
+        return $this->accountOwner ?? '';
+    }
 
-	public function setAccountOwner(string $accountOwner): ThirdpartyDTO
-	{
-		$this->accountOwner = $accountOwner;
-		return $this;
-	}
+    public function setAccountOwner(string $accountOwner): ThirdpartyDTO
+    {
+        $this->accountOwner = $accountOwner;
+        return $this;
+    }
 
 
 
-	public function getVatUsed(): bool
-	{
-		return $this->vat_used;
-	}
+    public function getVatUsed(): bool
+    {
+        return $this->vat_used;
+    }
 
-	public function setVatUsed(bool $vat_used): ThirdpartyDTO
-	{
-		$this->vat_used = $vat_used;
-		return $this;
-	}
+    public function setVatUsed(bool $vat_used): ThirdpartyDTO
+    {
+        $this->vat_used = $vat_used;
+        return $this;
+    }
 }

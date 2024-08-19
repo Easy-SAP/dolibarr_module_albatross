@@ -1,12 +1,13 @@
 <?php
 
 namespace Albatross;
-include_once dirname( __DIR__) .'/models/UserDTO.class.php';
+
+include_once dirname(__DIR__) .'/models/UserDTO.class.php';
 
 use User;
 use Albatross\UserDTO;
 
-require_once dirname(__DIR__,4) . '/user/class/user.class.php';
+require_once dirname(__DIR__, 4) . '/user/class/user.class.php';
 
 class UserDTOMapper
 {
@@ -39,11 +40,11 @@ class UserDTOMapper
         $newUser->zip = $userDTO->getZipCode();
         $newUser->town = $userDTO->getCity();
 
-		foreach ($userDTO->getGroups() as $userGroupDTO) {
-			$newUser->user_group_list[] = $userGroupDTO->getId();
-		}
+        foreach ($userDTO->getGroups() as $userGroupDTO) {
+            $newUser->user_group_list[] = $userGroupDTO->getId();
+        }
 
-		$newUser->entity = 1;
+        $newUser->entity = 1;
 
         return $newUser;
     }

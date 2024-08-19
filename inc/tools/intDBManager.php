@@ -18,7 +18,7 @@ interface intDBManager
 {
     public function createUser(UserDTO $userDTO): int;
 
-	public function createUserGroup(UserGroupDTO $userGroupDTO): int;
+    public function createUserGroup(UserGroupDTO $userGroupDTO): int;
 
     public function createCustomer(ThirdpartyDTO $thirdpartyDTO): int;
 
@@ -26,17 +26,17 @@ interface intDBManager
 
     public function createProduct(ProductDTO $productDTO): int;
 
-	public function createService(ServiceDTO $serviceDTO): int;
+    public function createService(ServiceDTO $serviceDTO): int;
 
     public function createOrder(OrderDTO $orderDTO): int;
 
     public function createInvoice($invoice): int;
 
-	public function createTicket(TicketDTO $ticketDTO): int;
+    public function createTicket(TicketDTO $ticketDTO): int;
 
     public function createEntity(EntityDTO $entityDTO): int;
 
-	public function setupEntity(int $entityId = 0, array $params = []): bool;
+    public function setupEntity(int $entityId = 0, array $params = []): bool;
 
     public function setSecurity(): bool;
 

@@ -53,25 +53,24 @@ class DoliDBManager implements intDBManager
 
         $res = $tmpuser->create($user);
 
-		foreach ($tmpuser->user_group_list as $groupId)
-		{
-			$tmpuser->SetInGroup($groupId, $userDTO->getEntity());
-		}
+        foreach ($tmpuser->user_group_list as $groupId) {
+            $tmpuser->SetInGroup($groupId, $userDTO->getEntity());
+        }
 
-		return $res;
+        return $res;
     }
 
-	public function createUserGroup(UserGroupDTO $userGroupDTO): int
-	{
-		dol_syslog(get_class($this) . '::createUserGroup label:' . $userGroupDTO->getLabel(), LOG_INFO);
-		global $db, $user;
+    public function createUserGroup(UserGroupDTO $userGroupDTO): int
+    {
+        dol_syslog(get_class($this) . '::createUserGroup label:' . $userGroupDTO->getLabel(), LOG_INFO);
+        global $db, $user;
 
-		$userGroupDTOMapper = new UserGroupDTOMapper();
-		$tmpUserGroup = $userGroupDTOMapper->toUserGroup($userGroupDTO);
+        $userGroupDTOMapper = new UserGroupDTOMapper();
+        $tmpUserGroup = $userGroupDTOMapper->toUserGroup($userGroupDTO);
 
-		$tmpUserGroup->create($user);
-		return $tmpUserGroup->id;
-	}
+        $tmpUserGroup->create($user);
+        return $tmpUserGroup->id;
+    }
 
     public function createCustomer(ThirdpartyDTO $thirdpartyDTO): int
     {
@@ -153,23 +152,23 @@ class DoliDBManager implements intDBManager
         return 1;
     }
 
-	public function createTicket(TicketDTO $ticketDTO): int
-	{
+    public function createTicket(TicketDTO $ticketDTO): int
+    {
         dol_syslog(get_class($this) . '::createTicket', LOG_INFO);
-		global $db, $user;
+        global $db, $user;
 
-		if (!isModEnabled('ticket')) {
-			// We enable the module
-			require_once DOL_DOCUMENT_ROOT . '/core/modules/modTicket.class.php';
-			$mod = new modTicket($db);
-			$mod->init();
-		}
+        if (!isModEnabled('ticket')) {
+            // We enable the module
+            require_once DOL_DOCUMENT_ROOT . '/core/modules/modTicket.class.php';
+            $mod = new modTicket($db);
+            $mod->init();
+        }
 
-		$ticketDTOMapper = new TicketDTOMapper();
-		$ticket = $ticketDTOMapper->toTicket($ticketDTO);
-		$res = $ticket->create($user);
-		return $ticket->id ?? $res;
-	}
+        $ticketDTOMapper = new TicketDTOMapper();
+        $ticket = $ticketDTOMapper->toTicket($ticketDTO);
+        $res = $ticket->create($user);
+        return $ticket->id ?? $res;
+    }
 
     public function createEntity(EntityDTO $entityDTO, array $params = []): int
     {
@@ -190,64 +189,66 @@ class DoliDBManager implements intDBManager
         $actionsMulticompany = new ActionsMulticompany($db);
         $action = 'add';
         $id = $actionsMulticompany->doAdminActions($action);
-		$action = 'view';
+        $action = 'view';
 
-		if(is_null($id) || $id <= 1) return 0;
+        if(is_null($id) || $id <= 1) {
+            return 0;
+        }
 
-		if($entityDTO->isEndPatternsWithId()) {
-			$entityDTO->setInvoicePattern($entityDTO->getReplacementInvoicePattern() . $id);
-			$entityDTO->setReplacementInvoicePattern($entityDTO->getReplacementInvoicePattern() . $id);
-			$entityDTO->setCreditNotePattern($entityDTO->getCreditNotePattern() . $id);
-			$entityDTO->setDownPaymentInvoicePattern($entityDTO->getDownPaymentInvoicePattern() . $id);
-			$entityDTO->setPropalPattern($entityDTO->getPropalPattern() . $id);
-			$entityDTO->setCustomerCodePattern($entityDTO->getCustomerCodePattern() . $id);
-			$entityDTO->setSupplierCodePattern($entityDTO->getSupplierCodePattern() . $id);
-		}
-		$this->configEntity($id, $entityDTO);
+        if($entityDTO->isEndPatternsWithId()) {
+            $entityDTO->setInvoicePattern($entityDTO->getReplacementInvoicePattern() . $id);
+            $entityDTO->setReplacementInvoicePattern($entityDTO->getReplacementInvoicePattern() . $id);
+            $entityDTO->setCreditNotePattern($entityDTO->getCreditNotePattern() . $id);
+            $entityDTO->setDownPaymentInvoicePattern($entityDTO->getDownPaymentInvoicePattern() . $id);
+            $entityDTO->setPropalPattern($entityDTO->getPropalPattern() . $id);
+            $entityDTO->setCustomerCodePattern($entityDTO->getCustomerCodePattern() . $id);
+            $entityDTO->setSupplierCodePattern($entityDTO->getSupplierCodePattern() . $id);
+        }
+        $this->configEntity($id, $entityDTO);
         return $id;
     }
 
-	private function configEntity(int $entityId, EntityDTO $entityDTO)
-	{
+    private function configEntity(int $entityId, EntityDTO $entityDTO)
+    {
         dol_syslog(get_class($this) . '::configEntity entity:' . $entityDTO->getName(), LOG_INFO);
-		global $db;
+        global $db;
 
-		if($entityDTO->getInvoicePattern() !== null) {
-			dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
-			dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_INVOICE', $entityDTO->getInvoicePattern(), 'chaine', 0, '', $entityId);
-		}
-		if($entityDTO->getReplacementInvoicePattern() !== null) {
-			dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
-			dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_REPLACEMENT', $entityDTO->getReplacementInvoicePattern(), 'chaine', 0, '', $entityId);
-		}
-		if($entityDTO->getCreditNotePattern() !== null) {
-			dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
-			dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_CREDIT', $entityDTO->getCreditNotePattern(), 'chaine', 0, '', $entityId);
-		}
-		if($entityDTO->getDownPaymentInvoicePattern() !== null) {
-			dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
-			dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_DEPOSIT', $entityDTO->getDownPaymentInvoicePattern(), 'chaine', 0, '', $entityId);
-		}
+        if($entityDTO->getInvoicePattern() !== null) {
+            dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
+            dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_INVOICE', $entityDTO->getInvoicePattern(), 'chaine', 0, '', $entityId);
+        }
+        if($entityDTO->getReplacementInvoicePattern() !== null) {
+            dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
+            dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_REPLACEMENT', $entityDTO->getReplacementInvoicePattern(), 'chaine', 0, '', $entityId);
+        }
+        if($entityDTO->getCreditNotePattern() !== null) {
+            dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
+            dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_CREDIT', $entityDTO->getCreditNotePattern(), 'chaine', 0, '', $entityId);
+        }
+        if($entityDTO->getDownPaymentInvoicePattern() !== null) {
+            dolibarr_set_const($db, 'FACTURE_ADDON', 'mod_facture_mercure', 'chaine', 0, '', $entityId);
+            dolibarr_set_const($db, 'FACTURE_MERCURE_MASK_DEPOSIT', $entityDTO->getDownPaymentInvoicePattern(), 'chaine', 0, '', $entityId);
+        }
 
-		if($entityDTO->getPropalPattern() !== null) {
-			dolibarr_set_const($db, 'PROPALE_ADDON', 'mod_propale_saphir', 'chaine', 0, '', $entityId);
-			dolibarr_set_const($db, 'PROPALE_SAPHIR_MASK', $entityDTO->getPropalPattern(), 'chaine', 0, '', $entityId);
-		}
+        if($entityDTO->getPropalPattern() !== null) {
+            dolibarr_set_const($db, 'PROPALE_ADDON', 'mod_propale_saphir', 'chaine', 0, '', $entityId);
+            dolibarr_set_const($db, 'PROPALE_SAPHIR_MASK', $entityDTO->getPropalPattern(), 'chaine', 0, '', $entityId);
+        }
 
-		if($entityDTO->getCustomerCodePattern() !== null) {
-			dolibarr_set_const($db, 'SOCIETE_CODECLIENT_ADDON', 'mod_codeclient_elephant', 'chaine', 0, '', $entityId);
-			dolibarr_set_const($db, 'COMPANY_ELEPHANT_MASK_CUSTOMER', $entityDTO->getCustomerCodePattern(), 'chaine', 0, '', $entityId);
-		}
-		if($entityDTO->getSupplierCodePattern() !== null) {
-			dolibarr_set_const($db, 'SOCIETE_CODECLIENT_ADDON', 'mod_codeclient_elephant', 'chaine', 0, '', $entityId);
-			dolibarr_set_const($db, 'COMPANY_ELEPHANT_MASK_SUPPLIER', $entityDTO->getSupplierCodePattern(), 'chaine', 0, '', $entityId);
-		}
-	}
+        if($entityDTO->getCustomerCodePattern() !== null) {
+            dolibarr_set_const($db, 'SOCIETE_CODECLIENT_ADDON', 'mod_codeclient_elephant', 'chaine', 0, '', $entityId);
+            dolibarr_set_const($db, 'COMPANY_ELEPHANT_MASK_CUSTOMER', $entityDTO->getCustomerCodePattern(), 'chaine', 0, '', $entityId);
+        }
+        if($entityDTO->getSupplierCodePattern() !== null) {
+            dolibarr_set_const($db, 'SOCIETE_CODECLIENT_ADDON', 'mod_codeclient_elephant', 'chaine', 0, '', $entityId);
+            dolibarr_set_const($db, 'COMPANY_ELEPHANT_MASK_SUPPLIER', $entityDTO->getSupplierCodePattern(), 'chaine', 0, '', $entityId);
+        }
+    }
 
     public function setupEntity(int $entityId = 0, array $params = []): bool
     {
         dol_syslog(get_class($this) . '::setupEntity $entityId:' . $entityId, LOG_INFO);
-		// TODO: Move to fixtures as it is a specific setup
+        // TODO: Move to fixtures as it is a specific setup
         global $user, $db;
         $isMasterEntity = ($entityId == 0);
         $isEasySAPEntity = ($params['isEasySAP'] ?? false);
@@ -390,7 +391,7 @@ class DoliDBManager implements intDBManager
             dolibarr_set_const($db, 'MULTICOMPANY_SHARINGS_ENABLED', 1, 'chaine', 0, '', 0);
             dolibarr_set_const($db, 'MULTICOMPANY_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
 
-			// Enable sharings
+            // Enable sharings
             dolibarr_set_const($db, 'MULTICOMPANY_THIRDPARTY_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
             dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
             dolibarr_set_const($db, 'MULTICOMPANY_CATEGORY_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
@@ -398,18 +399,18 @@ class DoliDBManager implements intDBManager
             dolibarr_set_const($db, 'MULTICOMPANY_BANKACCOUNT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
             dolibarr_set_const($db, 'MULTICOMPANY_TICKET_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
 
-			// Sharing documents
-			dolibarr_set_const($db, 'MULTICOMPANY_PROPOSAL_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-			dolibarr_set_const($db, 'MULTICOMPANY_INVOICE_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-			dolibarr_set_const($db, 'MULTICOMPANY_ORDER_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-			dolibarr_set_const($db, 'MULTICOMPANY_CONTRACT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            // Sharing documents
+            dolibarr_set_const($db, 'MULTICOMPANY_PROPOSAL_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_INVOICE_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_ORDER_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+            dolibarr_set_const($db, 'MULTICOMPANY_CONTRACT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
 
-			// By element sharing
+            // By element sharing
             dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
             dolibarr_set_const($db, 'MULTICOMPANY_CONTACT_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
             dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
 
-		}
+        }
 
         // Set common constant
         dolibarr_set_const($db, 'MAIN_THEME', 'md', 'chaine', 0, '', $this->currentEntityId);
@@ -496,9 +497,9 @@ class DoliDBManager implements intDBManager
         }
 
         $toDrop = [
-			'usergroup_user',
-			'usergroup_rights',
-			'usergroup',
+            'usergroup_user',
+            'usergroup_rights',
+            'usergroup',
             'facture_fourn_det',
             'facture_fourn',
             'facturedet',
@@ -512,7 +513,7 @@ class DoliDBManager implements intDBManager
             'societe_contacts',
             'societe_prices',
             'societe',
-			'ticket',
+            'ticket',
         ];
 
         foreach ($toDrop as $table) {

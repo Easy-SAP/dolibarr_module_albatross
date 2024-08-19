@@ -3,7 +3,7 @@
 namespace Albatross;
 
 include_once dirname(__DIR__) . '/models/ThirdpartyDTO.class.php';
-require_once dirname(__DIR__,4) . '/societe/class/societe.class.php';
+require_once dirname(__DIR__, 4) . '/societe/class/societe.class.php';
 
 class ThirdpartyDTOMapper
 {
@@ -17,8 +17,8 @@ class ThirdpartyDTOMapper
             ->setCity($thirdparty->town)
             ->setEmail($thirdparty->email)
             ->setPhone($thirdparty->phone)
-			->setSiret($thirdparty->idprof2)
-			->setVatUsed($thirdparty->tva_assuj == 1);
+            ->setSiret($thirdparty->idprof2)
+            ->setVatUsed($thirdparty->tva_assuj == 1);
 
         return $thirdpartyDTO;
     }
@@ -35,9 +35,9 @@ class ThirdpartyDTOMapper
         $thirdparty->town = $thirdpartyDTO->getCity();
         $thirdparty->email = $thirdpartyDTO->getEmail();
         $thirdparty->phone = $thirdpartyDTO->getPhone();
-		$thirdparty->idprof2 = $thirdpartyDTO->getSiret();
-		$thirdparty->tva_assuj = $thirdpartyDTO->getVatUsed() ? 1 : 0;
-		$thirdparty->entity = $conf->entity;
+        $thirdparty->idprof2 = $thirdpartyDTO->getSiret();
+        $thirdparty->tva_assuj = $thirdpartyDTO->getVatUsed() ? 1 : 0;
+        $thirdparty->entity = $conf->entity;
 
         $thirdparty->country_id = 1;
         $thirdparty->client = 0;
@@ -45,31 +45,31 @@ class ThirdpartyDTOMapper
         $thirdparty->fournisseur = 1;
         $thirdparty->array_options['options_fraisservice_entity'] = $thirdpartyDTO->getEntity();
 
-		// TODO: Add Bank accounts
+        // TODO: Add Bank accounts
 
         return $thirdparty;
     }
 
-	public function toCustomer(ThirdpartyDTO $thirdpartyDTO): \Societe
-	{
-		global $conf, $db;
+    public function toCustomer(ThirdpartyDTO $thirdpartyDTO): \Societe
+    {
+        global $conf, $db;
 
-		$thirdparty = new \Societe($db);
+        $thirdparty = new \Societe($db);
 
-		$thirdparty->name = $thirdpartyDTO->getName();
-		$thirdparty->address = $thirdpartyDTO->getAddress();
-		$thirdparty->zip = $thirdpartyDTO->getZipCode();
-		$thirdparty->town = $thirdpartyDTO->getCity();
-		$thirdparty->email = $thirdpartyDTO->getEmail();
-		$thirdparty->phone = $thirdpartyDTO->getPhone();
-		$thirdparty->idprof2 = $thirdpartyDTO->getSiret();
+        $thirdparty->name = $thirdpartyDTO->getName();
+        $thirdparty->address = $thirdpartyDTO->getAddress();
+        $thirdparty->zip = $thirdpartyDTO->getZipCode();
+        $thirdparty->town = $thirdpartyDTO->getCity();
+        $thirdparty->email = $thirdpartyDTO->getEmail();
+        $thirdparty->phone = $thirdpartyDTO->getPhone();
+        $thirdparty->idprof2 = $thirdpartyDTO->getSiret();
 
-		$thirdparty->country_id = 1;
-		$thirdparty->client = 1;
-		$thirdparty->code_client = 'auto';
-		$thirdparty->fournisseur = 0;
-		$thirdparty->entity = $conf->entity;
+        $thirdparty->country_id = 1;
+        $thirdparty->client = 1;
+        $thirdparty->code_client = 'auto';
+        $thirdparty->fournisseur = 0;
+        $thirdparty->entity = $conf->entity;
 
-		return $thirdparty;
-	}
+        return $thirdparty;
+    }
 }
