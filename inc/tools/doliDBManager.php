@@ -15,6 +15,8 @@ use ActionsMulticompany;
 use Albatross\EntityDTO;
 use Albatross\EntityDTOMapper;
 use Albatross\OrderDTO;
+use Albatross\InvoiceDTO;
+use Albatross\InvoiceDTOMapper;
 use Albatross\OrderDTOMapper;
 use Albatross\ProductDTO;
 use Albatross\ProductDTOMapper;
@@ -145,10 +147,25 @@ class DoliDBManager implements intDBManager
         return $order->id ?? 0;
     }
 
-    public function createInvoice($invoice): int
+    public function createInvoice(InvoiceDTO $invoiceDTO): int
     {
         dol_syslog(get_class($this) . 'createInvoice', LOG_INFO);
-        return 1;
+        global $conf, $db, $user;
+
+        $isModEnabled = (int) DOL_VERSION >= 16 ? isModEnabled('facture') : $conf->facture->enabled;
+        if (!$isModEnabled) {
+            // We enable the module
+            require_once DOL_DOCUMENT_ROOT . '/core/modules/modFacture.class.php';
+            $mod = new modFacture($db);
+            $mod->init();
+        }
+
+        $invoiceDTOMapper = new InvoiceDTOMapper();
+        $invoice = $invoiceDTOMapper->toInvoice($invoiceDTO);
+        $invoice->create($user);
+
+        // TODO: Move to fixtures
+        return $invoice->id ?? 0;
     }
 
     public function createTicket(TicketDTO $ticketDTO): int
@@ -250,231 +267,7 @@ class DoliDBManager implements intDBManager
     {
         dol_syslog(get_class($this) . '::setupEntity $entityId:' . $entityId, LOG_INFO);
         // TODO: Move to fixtures as it is a specific setup
-        global $user, $db;
-        $isMasterEntity = ($entityId == 0);
-        $isEasySAPEntity = ($params['isEasySAP'] ?? false);
-        $isModelEntity = ($params['isModel'] ?? false);
-
-        if (!$isMasterEntity) {
-            $actionsMulticompany = new ActionsMulticompany($db);
-            $actionsMulticompany->switchEntity($entityId, $user);
-        }
-
-        $this->currentEntityId = $entityId;
-        $this->setSecurity();
-
-        // Define needed modules
-        switch (true) {
-            case $isMasterEntity:
-                $neededModules = [
-                    'societe',
-                    'fournisseur',
-                    'service',
-                    'facture',
-                    'multiCompany',
-                    'userSwitcher',
-                    // System
-                    'syslog',
-                    'debugBar',
-                ];
-                break;
-            case $isEasySAPEntity:
-                $neededModules = [
-                    // RH
-                    'expenseReport',
-                    // GRC
-                    'societe',
-                    'propale',
-                    'contrat',
-                    'ticket',
-                    // GRF
-                    'fournisseur',
-                    // Modules Financiers
-                    'facture',
-                    'tax',
-                    'banque',
-                    'paymentByBankTransfer',
-                    'prelevement',
-                    'comptabilite',
-                    'accounting',
-                    //'bankImport',
-                    // PM
-                    'product',
-                    'service',
-                    'stock',
-                    // Divers
-                    'agenda',
-                    'ECM',
-                    'categorie',
-                    'fckeditor',
-                    'bookmark',
-                    'workflow',
-                    'import',
-                    'export',
-                    // Externe
-                    'api',
-                    'openSurvey',
-                    'socialNetworks',
-                    'notification',
-                    'mailing',
-                    'emailCollector',
-                    'externalSite',
-                    // System
-                    'cron',
-                    'syslog',
-                    'debugBar',
-                    // Other
-                    //'abricot',
-                    'albatross',
-                    'easysapChoreOverwriter',
-                    'fraisService',
-                    'userSwitcher',
-                ];
-                break;
-            case $isModelEntity:
-                $neededModules = [
-                    'societe',
-                    'propale',
-                    'banque',
-                    'paymentByBankTransfer',
-                    'prelevement',
-                    'comptabilite',
-                    'syslog',
-                    'debugBar',
-                    'service',
-                    'facture',
-                    // Divers
-                    'agenda',
-                    'ECM',
-                    'bookmark',
-                    'fckeditor',
-                    'mailing',
-                    'easysapChoreOverwriter',
-                    'fraisService',
-                    'userSwitcher',
-                ];
-                break;
-            default:
-                $neededModules = [
-                    'societe',
-                    'propale',
-                    'banque',
-                    'paymentByBankTransfer',
-                    'prelevement',
-                    'comptabilite',
-                    'syslog',
-                    'debugBar',
-                    'service',
-                    'facture',
-                    'agenda',
-                    'ECM',
-                    'bookmark',
-                    'fckeditor',
-                    'mailing',
-                    'easysapChoreOverwriter',
-                    'fraisService',
-                    'userSwitcher',
-                ]; // FIXME: Temporary : Remove when multicompany initialization is fixed
-                break;
-        }
-
-        $this->initModules($neededModules);
-
-        if ($isMasterEntity) {
-            // Set multicompany config
-            dolibarr_set_const($db, 'MAIN_INFO_SOCIETE_NOM', 'Entité principale', 'chaine', 0, '', 1);
-            dolibarr_set_const($db, 'MAIN_INFO_SOCIETE_COUNTRY', '1:FR:France', 'chaine', 0, '', 1);
-            dolibarr_set_const($db, 'MULTICOMPANY_TEMPLATE_MANAGEMENT', 1, 'int', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_VISIBLE_BY_DEFAULT', 1, 'int', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_ACTIVE_BY_DEFAULT', 1, 'int', 0, '', 0);
-
-            dolibarr_set_const($db, 'MULTICOMPANY_TRANSVERSE_MODE', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_SHARINGS_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
-
-            // Enable sharings
-            dolibarr_set_const($db, 'MULTICOMPANY_THIRDPARTY_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_CATEGORY_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_AGENDA_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_BANKACCOUNT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_TICKET_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-
-            // Sharing documents
-            dolibarr_set_const($db, 'MULTICOMPANY_PROPOSAL_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_INVOICE_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_ORDER_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_CONTRACT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-
-            // By element sharing
-            dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_CONTACT_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
-            dolibarr_set_const($db, 'MULTICOMPANY_PRODUCT_SHARING_BYELEMENT_ENABLED', 1, 'chaine', 0, '', 0);
-
-        }
-
-        // Set common constant
-        dolibarr_set_const($db, 'MAIN_THEME', 'md', 'chaine', 0, '', $this->currentEntityId);
-        dolibarr_set_const($db, 'THEME_ELDY_TOPMENU_BACK1', '191,95,0', 'chaine', 0, '', $this->currentEntityId);
-
-        if ($isEasySAPEntity) {
-            // We add extrafield to thirdparty
-            global $db;
-            $extrafield = new ExtraFields($db);
-            $extrafield->addExtraField(
-                'fraisservice_entity',
-                'Entité de facturation',
-                'select',
-                101,
-                6,
-                'thirdparty',
-                0,
-                0,
-                '',
-                'entity:label:rowid::active=1',
-                1,
-                1,
-                '',
-                '',
-                0,
-                $this->currentEntityId,
-                'easysapchoreoverwriter@easysapchoreoverwriter',
-                1,
-                0,
-                0
-            );
-        }
-
-        $this->currentEntityId = 0;
-        if (!$isMasterEntity) {
-            $actionsMulticompany = new ActionsMulticompany($db);
-            $actionsMulticompany->switchEntity(1, $user);
-        }
-
-        return 1;
-    }
-
-    public function setSecurity(): bool
-    {
-        dol_syslog(get_class($this) . '::setSecurity', LOG_INFO);
-        global $db;
-
-        $constArray = array(
-            'MAIN_SECURITY_CSRF_WITH_TOKEN' => (int)DOL_VERSION >= 17 ? '3' : '2',
-            'MAIN_RESTRICTHTML_ONLY_VALID_HTML' => '1',
-            'MAIN_RESTRICTHTML_ONLY_VALID_HTML_TIDY' => '1',
-            'MAIN_RESTRICTHTML_REMOVE_ALSO_BAD_ATTRIBUTES' => '1',
-            'MAIN_DISALLOW_URL_INTO_DESCRIPTIONS' => '1'
-        );
-
-        foreach ($constArray as $key => $value) {
-            if (!empty(dolibarr_get_const($db, $key))) {
-                dolibarr_del_const($db, $key);
-            }
-            dolibarr_set_const($db, $key, $value, 'chaine', 1, '', $this->currentEntityId);
-        }
-
-        return 1;
+        return true;
     }
 
     public function removeFixtures(): bool
@@ -546,44 +339,6 @@ class DoliDBManager implements intDBManager
                 dol_syslog(get_class($this) . '::removeFixtures ' . $db->lasterror(), LOG_ERR);
                 dol_print_error($db);
                 return -1;
-            }
-        }
-
-        return 1;
-    }
-
-    // SPECIFIC DOLIBARR FUNCTIONS
-
-    /**
-     * Initialize needed Dolibarr Modules
-     */
-    private function initModules(array $modules): int
-    {
-        dol_syslog(get_class($this) . '::initModules count:' . count($modules), LOG_INFO);
-        global $conf, $db;
-        foreach ($modules as $module) {
-            $lowercaseModule = strtolower($module);
-            $modName = 'mod' . ucfirst($module);
-            dol_syslog('Initializing module :' . $modName, LOG_NOTICE);
-            $isModEnabled = (int) DOL_VERSION >= 16 ? isModEnabled($module) : $conf->$module->enabled;
-            if (!$isModEnabled) {
-                // We enable the module
-                $modPath = DOL_DOCUMENT_ROOT . '/core/modules/' . $modName . '.class.php';
-                $customModPath = DOL_DOCUMENT_ROOT . '/custom/' . $lowercaseModule . '/core/modules/' . $modName . '.class.php';
-                if (!file_exists($modPath) && !file_exists($customModPath)) {
-                    dol_syslog('Module ' . $module . ' not found', LOG_ERR);
-                    return 0;
-                }
-
-                if (file_exists($customModPath)) {
-                    $modPath = $customModPath;
-                }
-
-                require_once $modPath;
-                $mod = new $modName($db);
-                $mod->init();
-            } else {
-                dol_syslog('Module ' . $modName . ' is already enabled', LOG_NOTICE);
             }
         }
 

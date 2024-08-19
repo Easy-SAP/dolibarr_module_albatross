@@ -4,6 +4,7 @@ namespace Albatross\Tools;
 
 //require_once dirname(__DIR__).'/models/index.php';
 
+use Albatross\InvoiceDTO;
 use Albatross\OrderDTO;
 use Albatross\ServiceDTO;
 use Albatross\ThirdpartyDTO;
@@ -53,7 +54,7 @@ class dbManagerStub implements intDBManager
         return 1;
     }
 
-    public function createInvoice($invoice): int
+    public function createInvoice(InvoiceDTO $invoice): int
     {
         return 1;
     }
@@ -71,11 +72,6 @@ class dbManagerStub implements intDBManager
     public function setupEntity(int $entityId = 0, array $params = []): bool
     {
         return true;
-    }
-
-    public function setSecurity(): bool
-    {
-        return 1;
     }
 
     public function removeFixtures(): bool

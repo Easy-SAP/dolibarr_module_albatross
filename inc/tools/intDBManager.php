@@ -5,6 +5,7 @@ namespace Albatross\Tools;
 require_once dirname(__DIR__) . '/models/index.php';
 //require_once dirname(__DIR__) . '/mappers/index.php';
 
+use Albatross\InvoiceDTO;
 use Albatross\OrderDTO;
 use Albatross\ProductDTO;
 use Albatross\ServiceDTO;
@@ -30,15 +31,13 @@ interface intDBManager
 
     public function createOrder(OrderDTO $orderDTO): int;
 
-    public function createInvoice($invoice): int;
+    public function createInvoice(InvoiceDTO $invoice): int;
 
     public function createTicket(TicketDTO $ticketDTO): int;
 
     public function createEntity(EntityDTO $entityDTO): int;
 
     public function setupEntity(int $entityId = 0, array $params = []): bool;
-
-    public function setSecurity(): bool;
 
     public function removeFixtures(): bool;
 }
