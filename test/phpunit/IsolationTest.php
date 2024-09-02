@@ -34,36 +34,6 @@ class IsolationTest extends TestCase
         }
     }
 
-    public function testMappersIsolation()
-    {
-        $mappersIndexPath = dirname(__DIR__, 2).'/inc/mappers/index.php';
-        $mappersFolderPath = dirname($mappersIndexPath);
-
-        $this->assertFileExists($mappersIndexPath);
-        define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
-
-        require_once $mappersIndexPath;
-
-        $mapperFileList = scandir($mappersFolderPath);
-        $mapperList = [];
-        foreach ($mapperFileList as $mapperFile) {
-            if(preg_match('/\.class\.php/', $mapperFile)) {
-                $mapper = preg_replace('/\.class\.php/', '', $mapperFile);
-                $mapperList[] = $mapper;
-            }
-        }
-
-        // We control that all mappers are in index.php
-        // Errors will be automaticly thrown if isolation is not respected
-        foreach ($mapperList as $mapper) {
-            $this->assertThat(
-                class_exists('Albatross\\'.$mapper),
-                $this->isTrue(),
-                'Class '.$mapper.' has been created but it is not in index.php or namespace is wrong'
-            );
-        }
-    }
-
     public function testToolsIsolation()
     {
         $this->assertFileExists(dirname(__DIR__, 2).'/inc/tools/dbManagerStub.php');

@@ -5,14 +5,17 @@ namespace test\functional;
 define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
 require_once dirname(__DIR__, 2).'/inc/mappers/UserDTOMapper.class.php';
 
+use Albatross\UserDTO;
+use Albatross\UserDTOMapper;
 use PHPUnit\Framework\TestCase;
+use User;
 
 class UserMapperTest extends TestCase
 {
     public function testUserDTOMapperConvertsToUserDTO()
     {
         global $db;
-        $user = new \User($db);
+        $user = new User($db);
         $user->firstname = 'John';
         $user->lastname = 'Doe';
         $user->email = 'john.doe@example.com';
@@ -21,7 +24,7 @@ class UserMapperTest extends TestCase
         $user->zip = '12345';
         $user->town = 'Test City';
 
-        $mapper = new \Albatross\UserDTOMapper();
+        $mapper = new UserDTOMapper();
         $userDTO = $mapper->toUserDTO($user);
 
         $this->assertEquals('John', $userDTO->getFirstname());
@@ -35,7 +38,7 @@ class UserMapperTest extends TestCase
 
     public function testUserDTOMapperConvertsToUser()
     {
-        $userDTO = new \Albatross\UserDTO();
+        $userDTO = new UserDTO();
         $userDTO->setFirstname('John');
         $userDTO->setLastname('Doe');
         $userDTO->setEmail('john.doe@example.com');
@@ -44,7 +47,7 @@ class UserMapperTest extends TestCase
         $userDTO->setZipCode('12345');
         $userDTO->setCity('Test City');
 
-        $mapper = new \Albatross\UserDTOMapper();
+        $mapper = new UserDTOMapper();
         $user = $mapper->toUser($userDTO);
 
         $this->assertEquals('John', $user->firstname);
@@ -59,9 +62,9 @@ class UserMapperTest extends TestCase
     public function testUserDTOMapperHandlesEmptyUser()
     {
         global $db;
-        $user = new \User($db);
+        $user = new User($db);
 
-        $mapper = new \Albatross\UserDTOMapper();
+        $mapper = new UserDTOMapper();
         $userDTO = $mapper->toUserDTO($user);
 
         $this->assertEmpty($userDTO->getFirstname());
@@ -76,9 +79,9 @@ class UserMapperTest extends TestCase
     public function testUserDTOMapperHandlesEmptyUserDTO()
     {
         global $db;
-        $userDTO = new \Albatross\UserDTO();
+        $userDTO = new UserDTO();
 
-        $mapper = new \Albatross\UserDTOMapper();
+        $mapper = new UserDTOMapper();
         $user = $mapper->toUser($userDTO);
 
         $this->assertEmpty($user->firstname);
