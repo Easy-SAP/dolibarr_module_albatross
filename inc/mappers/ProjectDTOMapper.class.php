@@ -28,7 +28,7 @@ class ProjectDTOMapper
         global $db;
         $project = new \Project($db);
 
-        $project->ref = 'auto';
+        $project->ref = uniqid();
         $project->title = $projectDTO->getLabel();
 
         return $project;
@@ -39,7 +39,7 @@ class ProjectDTOMapper
         global $db;
         $project = new \Project($db);
 
-        $project->ref = 'auto';
+        $project->ref = uniqid();
         $project->title = $projectDTO->getLabel();
         $project->usage_task = 1;
 

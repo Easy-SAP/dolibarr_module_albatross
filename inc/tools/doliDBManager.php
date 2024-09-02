@@ -205,7 +205,7 @@ class DoliDBManager implements intDBManager
         }
 
         $projectDTOMapper = new ProjectDTOMapper();
-        $project = $projectDTOMapper->toProject($projectDTO);
+        $project = $projectDTOMapper->toProjectWithTasks($projectDTO);
         $res = $project->create($user);
 
         return $ticket->id ?? $res;
@@ -333,6 +333,7 @@ class DoliDBManager implements intDBManager
             'societe_prices',
             'societe',
             'ticket',
+            'projet'
         ];
 
         foreach ($toDrop as $table) {
