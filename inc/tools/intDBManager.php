@@ -8,6 +8,7 @@ require_once dirname(__DIR__) . '/models/index.php';
 use Albatross\InvoiceDTO;
 use Albatross\OrderDTO;
 use Albatross\ProductDTO;
+use Albatross\ProjectDTO;
 use Albatross\ServiceDTO;
 use Albatross\ThirdpartyDTO;
 use Albatross\TicketDTO;
@@ -34,6 +35,8 @@ interface intDBManager
     public function createInvoice(InvoiceDTO $invoice): int;
 
     public function createTicket(TicketDTO $ticketDTO): int;
+
+    public function createProject(ProjectDTO $projectDTO): int;
 
     public function createEntity(EntityDTO $entityDTO): int;
 

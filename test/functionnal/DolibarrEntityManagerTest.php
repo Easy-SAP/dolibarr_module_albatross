@@ -87,6 +87,14 @@ class DolibarrEntityManagerTest extends TestCase
         $this->assertGreaterThan(0, $invoiceID);
     }
 
+    public function testCreateProject()
+    {
+        $projectDTO = RandomFactory::getRandomProject();
+        $projectID = $this->entityManager->createProject($projectDTO);
+
+        $this->assertGreaterThan(0, $projectID);
+    }
+
     public function testCreateTicket()
     {
         $ticketDTO = RandomFactory::getRandomTicket();

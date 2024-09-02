@@ -20,6 +20,8 @@ use Albatross\InvoiceDTOMapper;
 use Albatross\OrderDTOMapper;
 use Albatross\ProductDTO;
 use Albatross\ProductDTOMapper;
+use Albatross\ProjectDTO;
+use Albatross\ProjectDTOMapper;
 use Albatross\ServiceDTO;
 use Albatross\ThirdpartyDTO;
 use Albatross\ThirdpartyDTOMapper;
@@ -106,7 +108,7 @@ class DoliDBManager implements intDBManager
 
         $productDTOMapper = new ProductDTOMapper();
         $product = $productDTOMapper->toProduct($productDTO);
-        $product->create($user);
+        $res = $product->create($user);
 
         return $product->id ?? 0;
     }
@@ -177,7 +179,7 @@ class DoliDBManager implements intDBManager
         if (!$isModEnabled) {
             // We enable the module
             require_once DOL_DOCUMENT_ROOT . '/core/modules/modTicket.class.php';
-            $mod = new modTicket($db);
+            $mod = new \modTicket($db);
             $mod->init();
         }
 
@@ -188,6 +190,27 @@ class DoliDBManager implements intDBManager
         return $ticket->id ?? $res;
     }
 
+    public function createProject(ProjectDTO $projectDTO): int
+    {
+        dol_syslog(__METHOD__, LOG_INFO);
+
+        global $conf, $db, $user;
+
+        $isModEnabled = (int) DOL_VERSION >= 16 ? isModEnabled('projet') : $conf->projet->enabled;
+        if (!$isModEnabled) {
+            // We enable the module
+            require_once DOL_DOCUMENT_ROOT . '/core/modules/modProjet.class.php';
+            $mod = new \modProjet($db);
+            $mod->init();
+        }
+
+        $projectDTOMapper = new ProjectDTOMapper();
+        $project = $projectDTOMapper->toProject($projectDTO);
+        $res = $project->create($user);
+
+        return $ticket->id ?? $res;
+    }
+    
     public function createEntity(EntityDTO $entityDTO, array $params = []): int
     {
         dol_syslog(get_class($this) . '::createEntity entity:' . $entityDTO->getName(), LOG_INFO);
@@ -294,6 +317,7 @@ class DoliDBManager implements intDBManager
             'usergroup_user',
             'usergroup_rights',
             'usergroup',
+            'paiement_facture',
             'facture_fourn_det',
             'facture_fourn',
             'facturedet',
@@ -302,6 +326,7 @@ class DoliDBManager implements intDBManager
             'commande',
             'product_price',
             'product',
+            'socpeople',
             'societe_extrafields',
             'societe_commerciaux',
             'societe_contacts',

@@ -8,35 +8,30 @@ class DolibarrDefaultEntityConfigurator implements EntityConfiguratorInterface
 {
     /**
      * Initialize needed Dolibarr Modules
+     * @param string[] $modules
      */
     public function initModules(array $modules): int
     {
-        dol_syslog(get_class($this) . '::initModules count:' . count($modules), LOG_INFO);
-        global $conf, $db;
-        foreach ($modules as $module) {
-            $lowercaseModule = strtolower($module);
-            $modName = 'mod' . ucfirst($module);
-            dol_syslog('Initializing module :' . $modName, LOG_NOTICE);
-            $isModEnabled = (int) DOL_VERSION >= 16 ? isModEnabled($module) : $conf->$module->enabled;
-            if (!$isModEnabled) {
-                // We enable the module
-                $modPath = DOL_DOCUMENT_ROOT . '/core/modules/' . $modName . '.class.php';
-                $customModPath = DOL_DOCUMENT_ROOT . '/custom/' . $lowercaseModule . '/core/modules/' . $modName . '.class.php';
-                if (!file_exists($modPath) && !file_exists($customModPath)) {
-                    dol_syslog('Module ' . $module . ' not found', LOG_ERR);
-                    return 0;
+        try {
+            dol_syslog(get_class($this) . '::initModules count:' . count($modules), LOG_INFO);
+            global $conf, $db;
+            foreach ($modules as $requiredModule) {
+                $isModEnabled = (int) DOL_VERSION >= 16 ? isModEnabled($requiredModule) : $conf->$requiredModule->enabled;
+                if (!$isModEnabled) {
+                    // We enable the module
+                    $modPath = $this->getModulePath($requiredModule);
+                    $modName = $this->getModuleClassName($requiredModule);
+                    dol_syslog('Initializing module :' . $modName, LOG_NOTICE);
+                    require_once $modPath;
+                    $module = new $modName($db);
+                    $module->init();
+                } else {
+                    dol_syslog('Module ' . $modName . ' is already enabled', LOG_NOTICE);
                 }
-
-                if (file_exists($customModPath)) {
-                    $modPath = $customModPath;
-                }
-
-                require_once $modPath;
-                $mod = new $modName($db);
-                $mod->init();
-            } else {
-                dol_syslog('Module ' . $modName . ' is already enabled', LOG_NOTICE);
             }
+        } catch (\Exception $e) {
+            dol_syslog('Error: ' . $e->getMessage(), LOG_ERR);
+            return 0;
         }
 
         return 1;
@@ -59,7 +54,7 @@ class DolibarrDefaultEntityConfigurator implements EntityConfiguratorInterface
             if (!empty(dolibarr_get_const($db, $key))) {
                 dolibarr_del_const($db, $key);
             }
-            dolibarr_set_const($db, $key, $value, 'chaine', 1, '', $this->currentEntityId);
+            dolibarr_set_const($db, $key, $value, 'chaine', 1, '', 0);
         }
     }
 
@@ -67,5 +62,28 @@ class DolibarrDefaultEntityConfigurator implements EntityConfiguratorInterface
     {
         // TODO: Implement setupEntity() method.
         return 1;
+    }
+
+    public function getModulePath(string $moduleName)
+    {
+        $lowercaseModule = strtolower($moduleName);
+        $modFileName = 'mod' . ucfirst($moduleName);
+
+        $modPath = DOL_DOCUMENT_ROOT . '/core/modules/' . $modFileName . '.class.php';
+        if(file_exists($modPath)) {
+            return $modPath;
+        }
+
+        $modPath = DOL_DOCUMENT_ROOT . '/custom/' . $lowercaseModule . '/core/modules/' . $modFileName . '.class.php';
+        if (file_exists($modPath)) {
+            return $modPath;
+        }
+
+        throw new \Exception('Module ' . $moduleName . ' not found');
+    }
+
+    public function getModuleClassName(string $moduleName)
+    {
+        return 'mod' . ucfirst($moduleName);
     }
 }

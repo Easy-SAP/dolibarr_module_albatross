@@ -6,6 +6,7 @@ namespace Albatross\Tools;
 
 use Albatross\InvoiceDTO;
 use Albatross\OrderDTO;
+use Albatross\ProjectDTO;
 use Albatross\ServiceDTO;
 use Albatross\ThirdpartyDTO;
 use Albatross\TicketDTO;
@@ -65,6 +66,11 @@ class dbManagerStub implements intDBManager
     }
 
     public function createEntity(EntityDTO $entityDTO): int
+    {
+        return 1;
+    }
+
+    public function createProject(ProjectDTO $projectDTO): int
     {
         return 1;
     }

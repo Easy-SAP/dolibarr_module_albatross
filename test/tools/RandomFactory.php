@@ -4,6 +4,7 @@ require_once dirname(__DIR__, 2).'/inc/models/index.php';
 
 use Albatross\InvoiceLineDTO;
 use Albatross\OrderLineDTO;
+use Albatross\ProjectDTO;
 use Albatross\UserDTO;
 use Albatross\UserGroupDTO;
 use Albatross\ThirdpartyDTO;
@@ -140,6 +141,15 @@ class RandomFactory
             ->addInvoiceLine($invoiceLineDTO2);
 
         return $invoiceDTO;
+    }
+
+    public static function getRandomProject(): ProjectDTO
+    {
+        $projectDTO = new ProjectDTO();
+        $projectDTO
+            ->setLabel('Test Project');
+
+        return $projectDTO;
     }
 
     public static function getRandomTicket(): TicketDTO
