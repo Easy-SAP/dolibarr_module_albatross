@@ -129,6 +129,7 @@ class DoliDBManager implements intDBManager
     {
         dol_syslog(get_class($this) . 'createOrder', LOG_INFO);
         global $conf, $db, $user;
+        $user->id = 1;
 
         $isModEnabled = (int) DOL_VERSION >= 16 ? isModEnabled('commande') : $conf->commande->enabled;
         if (!$isModEnabled) {
@@ -140,7 +141,11 @@ class DoliDBManager implements intDBManager
 
         $orderDTOMapper = new OrderDTOMapper();
         $order = $orderDTOMapper->toOrder($orderDTO);
-        $order->create($user);
+        $res = $order->create($user);
+
+        if ($res <= 0) {
+            throw new \Exception($res . $order->error);
+        }
 
         // TODO: Move to fixtures
         if (rand(0, 1)) {
@@ -153,6 +158,7 @@ class DoliDBManager implements intDBManager
     {
         dol_syslog(get_class($this) . 'createInvoice', LOG_INFO);
         global $conf, $db, $user;
+        $user->id = 1;
 
         $isModEnabled = (int) DOL_VERSION >= 16 ? isModEnabled('facture') : $conf->facture->enabled;
         if (!$isModEnabled) {
@@ -164,7 +170,11 @@ class DoliDBManager implements intDBManager
 
         $invoiceDTOMapper = new InvoiceDTOMapper();
         $invoice = $invoiceDTOMapper->toInvoice($invoiceDTO);
-        $invoice->create($user);
+        $res = $invoice->create($user);
+
+        if ($res <= 0) {
+            throw new \Exception($res . $invoice->error);
+        }
 
         // TODO: Move to fixtures
         return $invoice->id ?? 0;

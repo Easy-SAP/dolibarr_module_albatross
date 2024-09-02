@@ -30,8 +30,14 @@ class DolibarrEntityManagerTest extends TestCase
 
     public function testCreateUser()
     {
-        $userDTO = RandomFactory::getRandomUser();
+        // Prepare needed group
+        $groupDTO = RandomFactory::getRandomUserGroup();
+        $groupID = $this->entityManager->createUserGroup($groupDTO);
+        $groupDTO->setId($groupID);
 
+        // Test
+        $userDTO = RandomFactory::getRandomUser();
+        $userDTO->addGroup($groupDTO);
         $userID = $this->entityManager->createUser($userDTO);
 
         $this->assertGreaterThan(0, $userID);
@@ -75,14 +81,37 @@ class DolibarrEntityManagerTest extends TestCase
 
     public function testCreateOrder()
     {
+        // Prepare needed entities
+        $customerDTO = RandomFactory::getRandomCustomer();
+        $supplierDTO = RandomFactory::getRandomSupplier();
+        $productDTO = RandomFactory::getRandomProduct();
+
+        $customerID =  $this->entityManager->createCustomer($customerDTO);
+        $supplierID =  $this->entityManager->createSupplier($supplierDTO);
+        $productID =  $this->entityManager->createProduct($productDTO);
+
+        // Test
         $orderDTO = RandomFactory::getRandomOrder();
+        $orderDTO
+            ->setCustomerId($customerID)
+            ->setSupplierId($supplierID);
+
         $orderID = $this->entityManager->createOrder($orderDTO);
         $this->assertGreaterThan(0, $orderID);
     }
 
     public function testCreateInvoice()
     {
+        $supplierDTO = RandomFactory::getRandomSupplier();
+        $customerDTO = RandomFactory::getRandomCustomer();
+        $supplierID = $this->entityManager->createSupplier($supplierDTO);
+        $customerID = $this->entityManager->createCustomer($customerDTO);
+
         $invoiceDTO = RandomFactory::getRandomInvoice();
+        $invoiceDTO
+            ->setSupplierId($supplierID)
+            ->setCustomerId($customerID);
+
         $invoiceID = $this->entityManager->createInvoice($invoiceDTO);
         $this->assertGreaterThan(0, $invoiceID);
     }

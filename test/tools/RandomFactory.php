@@ -85,6 +85,7 @@ class RandomFactory
 
     public static function getRandomOrder(): OrderDTO
     {
+        $date = new DateTime();
         $orderDTO = new OrderDTO();
         $orderDTO
             ->setCustomerId(100)
@@ -115,6 +116,7 @@ class RandomFactory
 
     public static function getRandomInvoice(): InvoiceDTO
     {
+        $date = new DateTime();
         $invoiceDTO = new InvoiceDTO();
         $invoiceDTO
             ->setCustomerId(100)
