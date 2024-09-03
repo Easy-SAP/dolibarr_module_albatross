@@ -42,8 +42,12 @@ class DolibarrDefaultEntityConfigurator implements EntityConfiguratorInterface
         dol_syslog(get_class($this) . '::setSecurity', LOG_INFO);
         global $db;
 
+        $tokenLevel = '3';
+        $tokenLevel = (int) DOL_VERSION < 17 ? '2' : $tokenLevel;
+        $tokenLevel = (int) DOL_VERSION < 15 ? '0' : $tokenLevel;
+
         $constArray = array(
-            'MAIN_SECURITY_CSRF_WITH_TOKEN' => (int)DOL_VERSION >= 17 ? '3' : '2',
+            'MAIN_SECURITY_CSRF_WITH_TOKEN' => $tokenLevel,
             'MAIN_RESTRICTHTML_ONLY_VALID_HTML' => '1',
             'MAIN_RESTRICTHTML_ONLY_VALID_HTML_TIDY' => '1',
             'MAIN_RESTRICTHTML_REMOVE_ALSO_BAD_ATTRIBUTES' => '1',

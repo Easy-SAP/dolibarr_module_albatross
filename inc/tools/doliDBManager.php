@@ -334,6 +334,8 @@ class DoliDBManager implements intDBManager
             'facture',
             'commandedet',
             'commande',
+            'propaldet',
+            'propal',
             'product_price',
             'product',
             'socpeople',
