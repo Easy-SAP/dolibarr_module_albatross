@@ -15,6 +15,7 @@ class InvoiceDTOMapper
         $invoiceDTO = new InvoiceDTO();
         $invoiceDTO
             ->setDate((new \DateTime())->setTimestamp($invoice->date))
+            ->setStatus($invoice->statut ?? InvoiceStatus::DRAFT)
             ->setCustomerId($invoice->ref_customer ?? 0)
             ->setSupplierId($invoice->socid ?? 0);
 
@@ -50,6 +51,7 @@ class InvoiceDTOMapper
         $invoice->date = $invoiceDTO->getDate()->getTimestamp();
         $invoice->socid = $invoiceDTO->getSupplierId();
         $invoice->ref_customer = $invoiceDTO->getCustomerId();
+        $invoice->statut = $invoiceDTO->getStatus();
 
         // optional
         $invoice->fk_project = $invoiceDTO->getProject();

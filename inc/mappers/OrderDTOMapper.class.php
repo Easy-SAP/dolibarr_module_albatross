@@ -11,9 +11,9 @@ class OrderDTOMapper
     {
         $orderDTO = new OrderDTO();
         $orderDTO
+            ->setDate((new \DateTime())->setTimestamp($order->date))
             ->setCustomerId($order->ref_customer ?? 0)
-            ->setSupplierId($order->socid ?? 0)
-            ->setDate((new \DateTime())->setTimestamp($order->date));
+            ->setSupplierId($order->socid ?? 0);
 
         foreach ($order->lines as $line) {
             $orderLineDTO = new OrderLineDTO();

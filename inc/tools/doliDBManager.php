@@ -14,6 +14,7 @@ require_once DOL_DOCUMENT_ROOT . '/custom/multicompany/class/actions_multicompan
 use ActionsMulticompany;
 use Albatross\EntityDTO;
 use Albatross\EntityDTOMapper;
+use Albatross\InvoiceStatus;
 use Albatross\OrderDTO;
 use Albatross\InvoiceDTO;
 use Albatross\InvoiceDTOMapper;
@@ -174,6 +175,10 @@ class DoliDBManager implements intDBManager
 
         if ($res <= 0) {
             throw new \Exception($res . $invoice->error);
+        }
+
+        if ($invoiceDTO->getStatus() === InvoiceStatus::VALIDATED) {
+            $invoice->validate($user);
         }
 
         // TODO: Move to fixtures

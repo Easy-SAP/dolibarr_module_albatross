@@ -4,6 +4,15 @@ namespace Albatross;
 
 require_once __DIR__ . '/InvoiceLineDTO.class.php';
 use Albatross\InvoiceLineDTO;
+use PhpOffice\PhpSpreadsheet\Calculation\Statistical;
+
+class InvoiceStatus {
+    const DRAFT = 0;
+    const VALIDATED = 1;
+    const SENT = 2;
+    const PAID = 3;
+    const CANCELLED = -1;
+}
 
 class InvoiceDTO
 {
@@ -11,6 +20,7 @@ class InvoiceDTO
      * @var \DateTime
      */
     private $date;
+    private int $status;
 
     /**
      * @var int
@@ -32,6 +42,7 @@ class InvoiceDTO
     public function __construct()
     {
         $this->date = new \DateTime();
+        $this->status = InvoiceStatus::DRAFT;
         $this->customerId = 0;
         $this->supplierId = 0;
         $this->invoiceLines = [];
@@ -48,6 +59,17 @@ class InvoiceDTO
     public function setDate(\DateTime $date): InvoiceDTO
     {
         $this->date = $date;
+        return $this;
+    }
+
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): InvoiceDTO
+    {
+        $this->status = $status;
         return $this;
     }
 
