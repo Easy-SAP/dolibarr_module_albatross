@@ -14,9 +14,14 @@ class InvoiceDTOMapper
     {
         $invoiceDTO = new InvoiceDTO();
         $invoiceDTO
+            ->setDate((new \DateTime())->setTimestamp($invoice->date))
             ->setCustomerId($invoice->ref_customer ?? 0)
-            ->setSupplierId($invoice->socid ?? 0)
-            ->setDate((new \DateTime())->setTimestamp($invoice->date));
+            ->setSupplierId($invoice->socid ?? 0);
+
+        // optional
+        if ($invoice->fk_project > 0) {
+            $invoiceDTO->setProject($invoice->fk_project);
+        }
 
         foreach ($invoice->lines as $line) {
             $invoiceLineDTO = new InvoiceLineDTO();
@@ -45,6 +50,9 @@ class InvoiceDTOMapper
         $invoice->date = $invoiceDTO->getDate()->getTimestamp();
         $invoice->socid = $invoiceDTO->getSupplierId();
         $invoice->ref_customer = $invoiceDTO->getCustomerId();
+
+        // optional
+        $invoice->fk_project = $invoiceDTO->getProject();
 
         foreach ($invoiceDTO->getInvoiceLines() as $invoiceLineDTO) {
             $invoiceLine = new \FactureLigne($db);

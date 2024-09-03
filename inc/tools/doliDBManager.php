@@ -218,6 +218,14 @@ class DoliDBManager implements intDBManager
         $project = $projectDTOMapper->toProjectWithTasks($projectDTO);
         $res = $project->create($user);
 
+        if ($res <= 0) {
+            throw new \Exception($res . $project->error);
+        }
+
+        if (rand(0, 1)) {
+            $project->setValid($user);
+        }
+
         return $ticket->id ?? $res;
     }
     

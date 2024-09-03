@@ -14,7 +14,7 @@ class InvoiceDTO
 
     /**
      * @var int
-    */
+     */
     private $customerId;
 
     /**
@@ -27,12 +27,17 @@ class InvoiceDTO
      */
     private $invoiceLines;
 
+    private ?int $project;
+
     public function __construct()
     {
         $this->date = new \DateTime();
         $this->customerId = 0;
         $this->supplierId = 0;
         $this->invoiceLines = [];
+
+        // optional
+        $this->project = null;
     }
 
     public function getDate(): \DateTime
@@ -79,6 +84,17 @@ class InvoiceDTO
     public function addInvoiceLine(InvoiceLineDTO $invoiceLine): InvoiceDTO
     {
         $this->invoiceLines[] = $invoiceLine;
+        return $this;
+    }
+
+    public function getProject(): ?int
+    {
+        return $this->project;
+    }
+
+    public function setProject(int $project): InvoiceDTO
+    {
+        $this->project = $project;
         return $this;
     }
 }
