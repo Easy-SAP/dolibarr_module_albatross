@@ -67,13 +67,21 @@ class DoliDBManager implements intDBManager
     public function createUserGroup(UserGroupDTO $userGroupDTO): int
     {
         dol_syslog(get_class($this) . '::createUserGroup label:' . $userGroupDTO->getLabel(), LOG_INFO);
-        global $db, $user;
+        global $user;
 
         $userGroupDTOMapper = new UserGroupDTOMapper();
         $tmpUserGroup = $userGroupDTOMapper->toUserGroup($userGroupDTO);
-        $tmpUserGroup->create($user);
+        $res = $tmpUserGroup->create($user);
 
-        return $tmpUserGroup->id;
+		if ($res <= 0) {
+			throw new \Exception($res . $tmpUserGroup->error);
+		}
+
+		foreach ($userGroupDTO->getEntities() as $entity) {
+			$tmpUserGroup->addrights('', 'allmodules', '', $entity);
+		}
+
+        return $res;
     }
 
     public function createCustomer(ThirdpartyDTO $thirdpartyDTO): int
@@ -233,7 +241,7 @@ class DoliDBManager implements intDBManager
 
         return $ticket->id ?? $res;
     }
-    
+
     public function createEntity(EntityDTO $entityDTO, array $params = []): int
     {
         dol_syslog(get_class($this) . '::createEntity entity:' . $entityDTO->getName(), LOG_INFO);

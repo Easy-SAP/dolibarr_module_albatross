@@ -34,7 +34,8 @@ class RandomFactory
     public static function getRandomUserGroup()
     {
         $userGroupDTO = new UserGroupDTO();
-        $userGroupDTO->setLabel('Admin');
+        $userGroupDTO
+			->setLabel('Admin');
 
         return $userGroupDTO;
     }

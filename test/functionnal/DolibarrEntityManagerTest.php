@@ -10,7 +10,7 @@ require_once ROOT . '/custom/albatross/inc/models/index.php';
 
 // Require tested class
 const MODULE_ROOT = ROOT . '/custom/albatross';
-require_once MODULE_ROOT . '/inc/tools/DoliDBManager.php';
+require_once MODULE_ROOT . '/inc/tools/doliDBManager.php';
 
 require_once MODULE_ROOT . '/test/tools/RandomFactory.php';
 
