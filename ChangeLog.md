@@ -1,4 +1,4 @@
-# CHANGELOG ALBATROSS FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
+# Changelog
 
 ## 1.0
 

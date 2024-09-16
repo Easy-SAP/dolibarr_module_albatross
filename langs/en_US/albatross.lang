@@ -20,7 +20,7 @@
 # Module label 'ModuleAlbatrossName'
 ModuleAlbatrossName = Albatross
 # Module description 'ModuleAlbatrossDesc'
-ModuleAlbatrossDesc = Albatross description
+ModuleAlbatrossDesc = Oriented object programming tools
 
 #
 # Admin page
