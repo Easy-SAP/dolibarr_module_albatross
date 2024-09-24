@@ -57,7 +57,7 @@ class DoliDBManager implements intDBManager
         $tmpuser = $userDTOMapper->toUser($userDTO);
         $res = $tmpuser->create($user);
 
-        foreach ($tmpuser->user_group_list as $groupId) {
+        foreach ($tmpuser->user_group_list ?? [] as $groupId) {
             $tmpuser->SetInGroup($groupId, $userDTO->getEntity());
         }
 

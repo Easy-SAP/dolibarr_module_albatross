@@ -40,7 +40,7 @@ class UserDTOMapper
         $newUser->zip = $userDTO->getZipCode();
         $newUser->town = $userDTO->getCity();
 
-        foreach ($userDTO->getGroups() as $userGroupDTO) {
+        foreach ($userDTO->getGroups() ?? [] as $userGroupDTO) {
             $newUser->user_group_list[] = $userGroupDTO->getId();
         }
 
