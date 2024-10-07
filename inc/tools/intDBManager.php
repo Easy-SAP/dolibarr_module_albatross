@@ -15,6 +15,7 @@ use Albatross\TicketDTO;
 use Albatross\UserDTO;
 use Albatross\EntityDTO;
 use Albatross\UserGroupDTO;
+use Albatross\TaskDTO;
 
 interface intDBManager
 {
@@ -41,6 +42,8 @@ interface intDBManager
     public function createEntity(EntityDTO $entityDTO): int;
 
     public function setupEntity(int $entityId = 0, array $params = []): bool;
+
+	public function createTask(TaskDTO $taskDTO): int;
 
     public function removeFixtures(): bool;
 }

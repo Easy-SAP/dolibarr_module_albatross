@@ -84,4 +84,10 @@ class dbManagerStub implements intDBManager
     {
         return 1;
     }
+
+	public function createTask(TaskDTO $taskDTO): int
+	{
+		// Simulate task creation and return a task ID.
+		return 1;
+	}
 }
