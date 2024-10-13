@@ -24,7 +24,7 @@ class InvoiceDTOMapper
             $invoiceDTO->setProject($invoice->fk_project);
         }
 
-        foreach ($invoice->lines as $line) {
+        foreach ($invoice->lines ?? [] as $line) {
             $invoiceLineDTO = new InvoiceLineDTO();
             $invoiceLineDTO
                 ->setUnitprice($line->subprice ?? 0)
@@ -32,7 +32,7 @@ class InvoiceDTOMapper
                 ->setDescription($line->desc ?? '')
                 ->setDiscount($line->remise_percent ?? 0);
 
-            if(!is_null($line->product->id)) {
+            if(!is_null($line->product) && !is_null($line->product->id)) {
                 $invoiceLineDTO->setProductId($line->product->id);
             }
 

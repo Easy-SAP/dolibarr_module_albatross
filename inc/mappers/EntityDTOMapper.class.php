@@ -37,10 +37,10 @@ class EntityDTOMapper
         global $db;
         $entity = new \DaoMulticompany($db);
 
-        $requiredNotNull = ['label', 'name'];
+        $requiredNotNull = ['name'];
         foreach($requiredNotNull as $field) {
             $methodName = 'get' . ucfirst($field);
-            if(is_null($entityDTO->$methodName())) {
+            if(is_null($entityDTO->$methodName()) || empty($entityDTO->$methodName())) {
                 throw new \Exception("Field $field is required and cannot be null");
             }
         }

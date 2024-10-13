@@ -24,6 +24,7 @@ use Albatross\ProductDTOMapper;
 use Albatross\ProjectDTO;
 use Albatross\ProjectDTOMapper;
 use Albatross\ServiceDTO;
+use Albatross\TaskDTO;
 use Albatross\ThirdpartyDTO;
 use Albatross\ThirdpartyDTOMapper;
 use Albatross\TicketDTO;
@@ -242,6 +243,13 @@ class DoliDBManager implements intDBManager
         return $ticket->id ?? $res;
     }
 
+    public function createTask(TaskDTO $taskDTO): int
+    {
+        // TODO: Implement createTask() method.
+
+        return 1;
+    }
+
     public function createEntity(EntityDTO $entityDTO, array $params = []): int
     {
         dol_syslog(get_class($this) . '::createEntity entity:' . $entityDTO->getName(), LOG_INFO);
@@ -403,4 +411,5 @@ class DoliDBManager implements intDBManager
 
         return 1;
     }
+
 }

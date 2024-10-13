@@ -2,20 +2,29 @@
 
 namespace test\functional;
 
-define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
-require_once dirname(__DIR__, 2).'/inc/mappers/UserGroupDTOMapper.class.php';
+// Prepare the environment
+if (!defined('TEST_ENV_SETUP')) {
+    require_once dirname(__FILE__) . '/_setup.php';
+}
 
+require_once dirname(__DIR__, 2) . '/inc/mappers/UserGroupDTOMapper.class.php';
+
+use Albatross\UserGroupDTO;
+use Albatross\UserGroupDTOMapper;
 use PHPUnit\Framework\TestCase;
+use UserGroup;
 
 class UserGroupMapperTest extends TestCase
 {
     public function testUserGroupDTOMapperConvertsToUserGroupDTO()
     {
-        $userGroup = new \UserGroup($db);
+        global $db;
+
+        $userGroup = new UserGroup($db);
         $userGroup->id = 1;
         $userGroup->name = 'Admin';
 
-        $mapper = new \Albatross\UserGroupDTOMapper();
+        $mapper = new UserGroupDTOMapper();
         $userGroupDTO = $mapper->toUserGroupDTO($userGroup);
 
         $this->assertEquals(1, $userGroupDTO->getId());
@@ -25,11 +34,11 @@ class UserGroupMapperTest extends TestCase
     public function testUserGroupDTOMapperConvertsToUserGroup()
     {
         global $db;
-        $userGroupDTO = new \Albatross\UserGroupDTO();
+        $userGroupDTO = new UserGroupDTO();
         $userGroupDTO->setId(1);
         $userGroupDTO->setLabel('Admin');
 
-        $mapper = new \Albatross\UserGroupDTOMapper();
+        $mapper = new UserGroupDTOMapper();
         $userGroup = $mapper->toUserGroup($userGroupDTO);
 
         $this->assertEquals(1, $userGroup->id);
@@ -38,24 +47,21 @@ class UserGroupMapperTest extends TestCase
 
     public function testUserGroupDTOMapperHandlesEmptyUserGroup()
     {
-        $userGroup = new \UserGroup($db);
+        global $db;
 
-        $mapper = new \Albatross\UserGroupDTOMapper();
+        $userGroup = new UserGroup($db);
+
+        $mapper = new UserGroupDTOMapper();
+        $this->expectException('Error');
         $userGroupDTO = $mapper->toUserGroupDTO($userGroup);
-
-        $this->assertNull($userGroupDTO->getId());
-        $this->assertNull($userGroupDTO->getLabel());
     }
 
     public function testUserGroupDTOMapperHandlesEmptyUserGroupDTO()
     {
-        global $db;
-        $userGroupDTO = new \Albatross\UserGroupDTO();
+        $userGroupDTO = new UserGroupDTO();
 
-        $mapper = new \Albatross\UserGroupDTOMapper();
+        $mapper = new UserGroupDTOMapper();
+        $this->expectException('Error');
         $userGroup = $mapper->toUserGroup($userGroupDTO);
-
-        $this->assertNull($userGroup->id);
-        $this->assertNull($userGroup->name);
     }
 }

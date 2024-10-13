@@ -15,7 +15,7 @@ class OrderDTOMapper
             ->setCustomerId($order->ref_customer ?? 0)
             ->setSupplierId($order->socid ?? 0);
 
-        foreach ($order->lines as $line) {
+        foreach ($order->lines ?? [] as $line) {
             $orderLineDTO = new OrderLineDTO();
             $orderLineDTO
                 ->setUnitprice($line->subprice ?? 0)
@@ -23,7 +23,7 @@ class OrderDTOMapper
                 ->setDescription($line->desc ?? '')
                 ->setDiscount($line->remise_percent ?? 0);
 
-            if(!is_null($line->product->id)) {
+            if(!is_null($line->product) && !is_null($line->product->id)) {
                 $orderLineDTO->setProductId($line->product->id);
             }
 

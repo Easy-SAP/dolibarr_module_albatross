@@ -2,17 +2,24 @@
 
 namespace test\functional;
 
-define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
-require_once dirname(__DIR__, 2).'/inc/mappers/ThirdpartyDTOMapper.class.php';
+// Prepare the environment
+if (!defined('TEST_ENV_SETUP')) {
+    require_once dirname(__FILE__) . '/_setup.php';
+}
 
+require_once dirname(__DIR__, 2) . '/inc/mappers/ThirdpartyDTOMapper.class.php';
+
+use Albatross\ThirdpartyDTO;
+use Albatross\ThirdpartyDTOMapper;
 use PHPUnit\Framework\TestCase;
+use Societe;
 
 class ThirdpartyMapperTest extends TestCase
 {
     public function testThirdpartyDTOMapperConvertsToThirdpartyDTO()
     {
         global $db;
-        $thirdparty = new \Societe($db);
+        $thirdparty = new Societe($db);
         $thirdparty->name = 'Test Name';
         $thirdparty->address = 'Test Address';
         $thirdparty->zip = '12345';
@@ -20,9 +27,9 @@ class ThirdpartyMapperTest extends TestCase
         $thirdparty->email = 'test@example.com';
         $thirdparty->phone = '1234567890';
         $thirdparty->idprof2 = '123456789';
-		$thirdparty->tva_assuj  = 0;
+        $thirdparty->tva_assuj = 0;
 
-        $mapper = new \Albatross\ThirdpartyDTOMapper();
+        $mapper = new ThirdpartyDTOMapper();
         $thirdpartyDTO = $mapper->toThirdpartyDTO($thirdparty);
 
         $this->assertEquals('Test Name', $thirdpartyDTO->getName());
@@ -32,13 +39,13 @@ class ThirdpartyMapperTest extends TestCase
         $this->assertEquals('test@example.com', $thirdpartyDTO->getEmail());
         $this->assertEquals('1234567890', $thirdpartyDTO->getPhone());
         $this->assertEquals('123456789', $thirdpartyDTO->getSiret());
-		$this->assertFalse($thirdpartyDTO->isVatUsed());
+        $this->assertFalse($thirdpartyDTO->isVatUsed());
     }
 
     public function testThirdpartyDTOMapperConvertsToSupplier()
     {
         global $db, $conf;
-        $thirdpartyDTO = new \Albatross\ThirdpartyDTO();
+        $thirdpartyDTO = new ThirdpartyDTO();
         $thirdpartyDTO->setName('Test Supplier');
         $thirdpartyDTO->setAddress('Test Address');
         $thirdpartyDTO->setZipCode('12345');
@@ -47,7 +54,7 @@ class ThirdpartyMapperTest extends TestCase
         $thirdpartyDTO->setPhone('1234567890');
         $thirdpartyDTO->setSiret('123456789');
 
-        $mapper = new \Albatross\ThirdpartyDTOMapper();
+        $mapper = new ThirdpartyDTOMapper();
         $supplier = $mapper->toSupplier($thirdpartyDTO);
 
         $this->assertEquals('Test Supplier', $supplier->name);
@@ -58,13 +65,13 @@ class ThirdpartyMapperTest extends TestCase
         $this->assertEquals('1234567890', $supplier->phone);
         $this->assertEquals('123456789', $supplier->idprof2);
         $this->assertEquals(1, $supplier->fournisseur);
-		$this->assertEquals(1, $supplier->tva_assuj);
+        $this->assertEquals(1, $supplier->tva_assuj);
     }
 
     public function testThirdpartyDTOMapperConvertsToCustomer()
     {
         global $db, $conf;
-        $thirdpartyDTO = new \Albatross\ThirdpartyDTO();
+        $thirdpartyDTO = new ThirdpartyDTO();
         $thirdpartyDTO->setName('Test Customer');
         $thirdpartyDTO->setAddress('Test Address');
         $thirdpartyDTO->setZipCode('12345');
@@ -73,7 +80,7 @@ class ThirdpartyMapperTest extends TestCase
         $thirdpartyDTO->setPhone('1234567890');
         $thirdpartyDTO->setSiret('123456789');
 
-        $mapper = new \Albatross\ThirdpartyDTOMapper();
+        $mapper = new ThirdpartyDTOMapper();
         $customer = $mapper->toCustomer($thirdpartyDTO);
 
         $this->assertEquals('Test Customer', $customer->name);
@@ -84,15 +91,15 @@ class ThirdpartyMapperTest extends TestCase
         $this->assertEquals('1234567890', $customer->phone);
         $this->assertEquals('123456789', $customer->idprof2);
         $this->assertEquals(1, $customer->client);
-		$this->assertEquals(1, $customer->tva_assuj);
+        $this->assertEquals(1, $customer->tva_assuj);
     }
 
     public function testThirdpartyDTOMapperHandlesEmptyThirdparty()
     {
         global $db;
-        $thirdparty = new \Societe($db);
+        $thirdparty = new Societe($db);
 
-        $mapper = new \Albatross\ThirdpartyDTOMapper();
+        $mapper = new ThirdpartyDTOMapper();
         $thirdpartyDTO = $mapper->toThirdpartyDTO($thirdparty);
 
         $this->assertEmpty($thirdpartyDTO->getName());
@@ -102,15 +109,15 @@ class ThirdpartyMapperTest extends TestCase
         $this->assertEmpty($thirdpartyDTO->getEmail());
         $this->assertEmpty($thirdpartyDTO->getPhone());
         $this->assertEmpty($thirdpartyDTO->getSiret());
-		$this->assertTrue($thirdpartyDTO->isVatUsed()); // Forced by Dolibarr => If nothing is set, it is true
+        $this->assertTrue($thirdpartyDTO->isVatUsed()); // Forced by Dolibarr => If nothing is set, it is true
     }
 
     public function testThirdpartyDTOMapperHandlesEmptyThirdpartyDTO()
     {
         global $db, $conf;
-        $thirdpartyDTO = new \Albatross\ThirdpartyDTO();
+        $thirdpartyDTO = new ThirdpartyDTO();
 
-        $mapper = new \Albatross\ThirdpartyDTOMapper();
+        $mapper = new ThirdpartyDTOMapper();
         $thirdparty = $mapper->toSupplier($thirdpartyDTO);
 
         $this->assertEmpty($thirdparty->name);
@@ -121,6 +128,6 @@ class ThirdpartyMapperTest extends TestCase
         $this->assertEmpty($thirdparty->phone);
         $this->assertEmpty($thirdparty->idprof2);
         $this->assertEquals(1, $thirdparty->fournisseur);
-		$this->assertEquals(1, $thirdparty->tva_assuj);
+        $this->assertEquals(1, $thirdparty->tva_assuj);
     }
 }

@@ -8,6 +8,7 @@ use Albatross\InvoiceDTO;
 use Albatross\OrderDTO;
 use Albatross\ProjectDTO;
 use Albatross\ServiceDTO;
+use Albatross\TaskDTO;
 use Albatross\ThirdpartyDTO;
 use Albatross\TicketDTO;
 use Albatross\UserDTO;
@@ -87,7 +88,6 @@ class dbManagerStub implements intDBManager
 
 	public function createTask(TaskDTO $taskDTO): int
 	{
-		// Simulate task creation and return a task ID.
 		return 1;
 	}
 }

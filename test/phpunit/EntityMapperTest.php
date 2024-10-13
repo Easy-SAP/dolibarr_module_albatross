@@ -2,10 +2,18 @@
 
 namespace test\functional;
 
-define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
-require_once dirname(__DIR__, 2).'/inc/mappers/EntityDTOMapper.class.php';
+// Prepare the environment
+if (!defined('TEST_ENV_SETUP')) {
+    require_once dirname(__FILE__) . '/_setup.php';
+}
+
+require_once dirname(__DIR__, 2) . '/inc/mappers/EntityDTOMapper.class.php';
 
 
+use Albatross\EntityDTO;
+use Albatross\EntityDTOMapper;
+
+use DaoMulticompany;
 use PHPUnit\Framework\TestCase;
 
 class EntityMapperTest extends TestCase
@@ -13,7 +21,7 @@ class EntityMapperTest extends TestCase
     public function testEntityMapperConvertsToEntity()
     {
         // Control transaltions
-        $entityDTO = new \Albatross\EntityDTO();
+        $entityDTO = new EntityDTO();
         $entityDTO->setLabel('Test Label');
         $entityDTO->setName('Test Name');
         $entityDTO->setModel(1);
@@ -21,7 +29,7 @@ class EntityMapperTest extends TestCase
         $entityDTO->setZipCode('12345');
         $entityDTO->setCity('Test City');
 
-        $mapper = new \Albatross\EntityDTOMapper();
+        $mapper = new EntityDTOMapper();
         $entity = $mapper->toEntity($entityDTO);
 
         $this->assertEquals('Test Label', $entity->label);
@@ -35,9 +43,9 @@ class EntityMapperTest extends TestCase
     public function testEntityDTOMapperHandlesEmptyEntity()
     {
         global $db;
-        $entity = new \DaoMulticompany($db);
+        $entity = new DaoMulticompany($db);
 
-        $mapper = new \Albatross\EntityDTOMapper();
+        $mapper = new EntityDTOMapper();
 
         $this->expectExceptionMessage('Field label is required and cannot be null');
         $mapper->toEntityDTO($entity);
@@ -45,28 +53,28 @@ class EntityMapperTest extends TestCase
 
     public function testEntityDTOMapperHandlesEmptyEntityDTO()
     {
-        $entityDTO = new \Albatross\EntityDTO();
+        $entityDTO = new EntityDTO();
 
-        $mapper = new \Albatross\EntityDTOMapper();
+        $mapper = new EntityDTOMapper();
 
-        $this->expectException('Error');
+        $this->expectException('Exception');
         $entity = $mapper->toEntity($entityDTO);
 
         $entityDTO->setLabel('Test Label');
 
-        $this->assertNull($entity->name);
-        $this->assertNull($entity->usetemplate);
+        $this->assertEmpty($entity->name);
+        $this->assertEmpty($entity->usetemplate);
         $this->assertEmpty($entity->address);
         $this->assertEmpty($entity->zipcode);
-        $this->assertNull($entity->town);
+        $this->assertEmpty($entity->town);
     }
 
     public function testEntityDTOMapperHandlesEntityDTOWithMinimumValue()
     {
-        $entityDTO = new \Albatross\EntityDTO();
+        $entityDTO = new EntityDTO();
         $entityDTO->setName('Test Name');
 
-        $mapper = new \Albatross\EntityDTOMapper();
+        $mapper = new EntityDTOMapper();
 
         $entity = $mapper->toEntity($entityDTO);
 

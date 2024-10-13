@@ -2,7 +2,11 @@
 
 namespace test\functional;
 
-define('DOL_DOCUMENT_ROOT', dirname(__DIR__, 4));
+// Prepare the environment
+if(!defined('TEST_ENV_SETUP')) {
+    require_once dirname(__FILE__).'/_setup.php';
+}
+
 require_once dirname(__DIR__, 2).'/inc/mappers/OrderDTOMapper.class.php';
 
 
