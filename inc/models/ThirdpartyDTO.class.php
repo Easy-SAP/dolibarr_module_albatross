@@ -131,6 +131,17 @@ class ThirdpartyDTO
         return $this;
     }
 
+    public function setDpt(string $dpt): ThirdpartyDTO
+    {
+        $this->fk_departement = $dpt;
+        return $this;
+    }
+
+    public function getDpt(): string
+    {
+        return $this->fk_departement;
+    }
+
     public function getEmail(): string
     {
         return $this->email;

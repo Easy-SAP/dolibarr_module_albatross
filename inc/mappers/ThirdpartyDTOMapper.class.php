@@ -33,6 +33,7 @@ class ThirdpartyDTOMapper
         $thirdparty->address = $thirdpartyDTO->getAddress();
         $thirdparty->zip = $thirdpartyDTO->getZipCode();
         $thirdparty->town = $thirdpartyDTO->getCity();
+        $thirdparty->state_id = $thirdpartyDTO->getDpt();
         $thirdparty->email = $thirdpartyDTO->getEmail();
         $thirdparty->phone = $thirdpartyDTO->getPhone();
         $thirdparty->idprof2 = $thirdpartyDTO->getSiret();
